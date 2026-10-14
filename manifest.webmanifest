@@ -1,0 +1,32 @@
+{
+  "name": "Quiz Oli – zamówienia i finanse publiczne",
+  "short_name": "Quiz Oli",
+  "description": "Fiszki na egzamin: fiszki, luki, krótkie sprawdziany, słuchanie i egzamin próbny.",
+  "lang": "pl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4f1f9",
+  "theme_color": "#6b3fa0",
+  "icons": [
+    {
+      "src": "ikona-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "ikona-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "ikona-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

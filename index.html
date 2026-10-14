@@ -1,0 +1,1221 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Zamówienia i finanse publiczne</title>
+<meta name="theme-color" content="#6b3fa0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Quiz Oli">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="ikona-192.png">
+<link rel="apple-touch-icon" href="ikona-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font-size:14px}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<style>
+/* Układ: jedna kolumna jak karta egzaminacyjna; na górze stan nauki i wybór sposobu, w środku karta, w rogu ludziki. */
+:root{
+  --bg:#f4f1f9; --surface:#ffffff; --ink:#221a2e; --muted:#665b74; --line:#e0d8ea;
+  --accent:#6b3fa0; --accent-soft:#efe6fa; --fiolet-mocny:#8e5bd1;
+  --ok:#1f7a4d; --ok-soft:#e2f3ea; --mid:#a8670a; --mid-soft:#fbf0dc; --bad:#b0362f; --bad-soft:#f8e3e1;
+  --new:#9aa6b2; --cien:rgba(15,30,45,.18);
+  --f-read:"Literata", Georgia, "Times New Roman", serif;
+  --f-ui:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#15111c; --surface:#201a2a; --ink:#ece6f3; --muted:#a99db8; --line:#352c42;
+  --accent:#c4a3f0; --accent-soft:#33264a; --fiolet-mocny:#a97ce8;
+  --ok:#5cc792; --ok-soft:#173327; --mid:#e6b45c; --mid-soft:#3a2d15; --bad:#ec8a82; --bad-soft:#3d1f1d;
+  --new:#5f6c79; --cien:rgba(0,0,0,.5); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#15111c; --surface:#201a2a; --ink:#ece6f3; --muted:#a99db8; --line:#352c42;
+  --accent:#c4a3f0; --accent-soft:#33264a; --fiolet-mocny:#a97ce8;
+  --ok:#5cc792; --ok-soft:#173327; --mid:#e6b45c; --mid-soft:#3a2d15; --bad:#ec8a82; --bad-soft:#3d1f1d;
+  --new:#5f6c79; --cien:rgba(0,0,0,.5); color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;overflow-x:clip}
+.wrap{max-width:720px;margin:0 auto;padding-inline:16px;padding-block:20px 120px;display:grid;gap:16px}
+h1{font-family:var(--f-read);font-weight:600;font-size:1.35rem;margin:0;text-wrap:balance}
+.sub{color:var(--muted);font-size:.85rem;margin:2px 0 0}
+
+.stan{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;display:grid;gap:10px}
+.pasek{display:flex;height:10px;border-radius:5px;overflow:hidden;background:var(--new)}
+.pasek span{display:block;height:100%;transition:width .3s}
+.liczby{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.85rem;font-variant-numeric:tabular-nums}
+.liczby b{font-weight:600}
+.kropka{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:0}
+.seria{color:var(--mid);font-weight:600}
+
+.etykieta{font-size:.75rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+.sposoby{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px}
+.sposob{font:500 .85rem/1.25 var(--f-ui);text-align:left;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:9px 10px;border-radius:10px;cursor:pointer;display:grid;gap:2px}
+.sposob .ik{font-size:1.2rem}
+.sposob small{color:var(--muted);font-size:.72rem;font-weight:400}
+.sposob[aria-pressed="true"]{border:2px solid var(--accent);background:var(--accent-soft);padding:8px 9px}
+.tryby{display:flex;flex-wrap:wrap;gap:6px}
+.tryb{font:500 .85rem var(--f-ui);border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:7px 12px;border-radius:999px;cursor:pointer}
+.tryb[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+
+.karta{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:grid;gap:14px;min-width:0}
+.karta-gora{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.znacznik{font-size:.75rem;letter-spacing:.04em;padding:2px 9px;border-radius:999px;text-transform:none}
+.pytanie{font-family:var(--f-read);font-size:1.2rem;line-height:1.45;font-weight:600;margin:0;text-wrap:pretty}
+.odp{font-family:var(--f-read);font-size:1rem;line-height:1.65;border-top:1px solid var(--line);padding-top:14px;min-width:0;overflow-wrap:anywhere}
+.odp p{margin:0 0 .7em}
+.odp ul{margin:0 0 .7em;padding-left:1.2em}
+.odp li{margin:.2em 0}
+.notka{background:var(--accent-soft);border-radius:8px;padding:12px 14px;margin-top:6px}
+.notka summary{font-family:var(--f-ui);font-weight:600;font-size:.85rem;color:var(--accent);cursor:pointer}
+.notka[open] summary{margin-bottom:8px}
+
+.btn{font:600 .95rem var(--f-ui);border:0;border-radius:9px;padding:13px 16px;cursor:pointer;min-height:48px}
+.btn:focus-visible,.tryb:focus-visible,.sposob:focus-visible,.link:focus-visible,.btn-mala:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.pokaz{background:var(--accent);color:var(--surface);width:100%}
+.drugi{background:var(--surface);color:var(--accent);border:2px solid var(--accent)}
+.rzad{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media (max-width:420px){.rzad{grid-template-columns:1fr}}
+.oceny{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.o-bad{background:var(--bad-soft);color:var(--bad)}
+.o-mid{background:var(--mid-soft);color:var(--mid)}
+.o-ok{background:var(--ok-soft);color:var(--ok)}
+.oceny .sug{outline:3px solid currentColor;outline-offset:-3px}
+.oceny small{display:block;font-weight:400;font-size:.72rem;opacity:.85}
+.nawig{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.link{background:none;border:0;color:var(--accent);font:500 .9rem var(--f-ui);cursor:pointer;padding:6px 2px}
+
+/* luki i słowa-klucze */
+.luki-pasek{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px;font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums}
+mark.k{background:var(--accent-soft);color:inherit;border-radius:3px;padding:0 3px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.luki mark.k{background:var(--line);color:transparent;cursor:pointer;user-select:none;border-bottom:2px dashed var(--muted)}
+.luki mark.k:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+.luki mark.k.odkr{background:var(--ok-soft);color:var(--ink);border-bottom-color:transparent;cursor:default;user-select:auto}
+mark.k.traf{background:var(--ok-soft);color:var(--ok);font-weight:600}
+mark.k.brak{background:var(--bad-soft);color:var(--bad);font-weight:600;text-decoration:underline wavy;text-underline-offset:3px}
+
+.wynik{border-radius:10px;padding:12px 14px;display:grid;gap:4px}
+.wynik b{font-size:1.05rem}
+.zapis-mowy{background:var(--bg);border-radius:8px;padding:10px 12px;font-family:var(--f-read);font-size:.95rem;overflow-wrap:anywhere;white-space:pre-wrap}
+.pole-pisz{width:100%;font:400 1rem/1.55 var(--f-read);padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);resize:vertical;min-height:9em}
+.pole-pisz:focus-visible,.pole:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+.plan{display:grid;gap:8px;border-top:1px solid var(--line);padding-top:10px;font-size:.88rem}
+.plan-rzad{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.plan .btn-mala.glowny{background:var(--accent);color:var(--surface);border-color:var(--accent)}
+.pomo{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;gap:10px;align-items:center;justify-content:space-between;background:var(--accent);color:var(--surface);border-radius:10px;padding:8px 14px;font-size:.9rem;box-shadow:0 4px 14px var(--cien)}
+.pomo.przerwa{background:var(--ok)}
+.pomo b{font:600 1.15rem var(--f-ui);font-variant-numeric:tabular-nums}
+.pomo .link{color:var(--surface);text-decoration:underline}
+.chipy{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:3px 10px;font-size:.82rem;font-weight:500}
+.chip.slaby{background:var(--bad-soft);color:var(--bad)}
+.sciaga{display:grid;gap:10px}
+.sc-poz{border-top:1px solid var(--line);padding-top:10px;display:grid;gap:6px}
+.sc-pyt{margin:0;font-weight:600;font-family:var(--f-read)}
+.sc-poz summary{font-size:.82rem;color:var(--accent);cursor:pointer}
+.sc-poz .odp{border-top:0;padding-top:6px;font-size:.92rem}
+.slaby-wiersz{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;border-top:1px solid var(--line);padding-top:8px}
+.info{background:var(--mid-soft);color:var(--ink);border-radius:8px;padding:10px 12px;font-size:.88rem}
+
+/* krótki quiz po pytaniu */
+.zadanie{border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:grid;gap:10px}
+.zadanie p{margin:0;font-family:var(--f-read);line-height:1.55}
+.zadanie .luka{display:inline-block;min-width:5em;border-bottom:2px solid var(--accent);color:var(--accent);font-weight:600;text-align:center}
+.opcje{display:grid;gap:6px}
+.opcja{font:500 .92rem/1.35 var(--f-ui);text-align:left;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;min-height:44px}
+.opcja:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.opcja.dobra{background:var(--ok-soft);border-color:var(--ok);color:var(--ok);font-weight:600}
+.opcja.zla{background:var(--bad-soft);border-color:var(--bad);color:var(--bad);text-decoration:line-through}
+.opcja:disabled{cursor:default}
+
+/* słuchanie */
+.faza{font-size:.8rem;letter-spacing:.07em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.licznik{font:600 2.4rem var(--f-read);color:var(--accent);text-align:center;font-variant-numeric:tabular-nums}
+.pigulki{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:.82rem;color:var(--muted)}
+
+/* egzamin próbny */
+.postep-egz{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.postep-egz span{display:block;height:100%;background:var(--accent)}
+.ocena-duza{font:600 3rem var(--f-read);text-align:center;margin:0}
+
+.lista{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 0}
+.lista summary{padding:10px 14px;font-weight:600;cursor:pointer}
+.lista ol{list-style:none;margin:0;padding:0}
+.lista li button{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);padding:10px 14px;color:var(--ink);font:400 .9rem/1.4 var(--f-ui);cursor:pointer}
+.lista li button:hover{background:var(--accent-soft)}
+.lista .nr{font-variant-numeric:tabular-nums;color:var(--muted);min-width:2ch}
+.lista .kropka{margin-top:6px;flex:none}
+
+.ust{display:grid;gap:10px;padding:4px 14px 14px;border-top:1px solid var(--line)}
+.ust-rzad{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;padding-top:10px;font-size:.9rem}
+.pole{font:400 .85rem var(--f-ui);padding:6px 8px;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);max-width:min(240px,60vw)}
+label.btn-mala{display:inline-block}
+.miniatury{display:flex;flex-wrap:wrap;gap:8px}
+.miniatury img{width:52px;height:52px;border-radius:50%;object-fit:cover;border:3px solid var(--fiolet-mocny)}
+.postac img{width:100%;height:100%;border-radius:50%;object-fit:cover;border:4px solid var(--fiolet-mocny);box-shadow:0 6px 16px var(--cien);background:var(--accent-soft)}
+.pukanie .postac img{animation:drgaj .2s 5}
+.serca{position:absolute;inset:0;pointer-events:none}
+.serca i{position:absolute;bottom:60%;font-style:normal;opacity:0}
+.radosc .serca i,.pukanie .serca i{animation:serce 1.6s ease-out}
+.serca i:nth-child(2){left:30%;animation-delay:.25s!important}.serca i:nth-child(3){left:65%;animation-delay:.5s!important}
+@keyframes serce{0%{opacity:0;transform:translateY(0) scale(.6)}25%{opacity:1}100%{opacity:0;transform:translateY(-46px) scale(1.2)}}
+.stopka{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;font-size:.8rem;color:var(--muted)}
+.potw{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn-mala{font:500 .8rem var(--f-ui);padding:6px 10px;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.btn-mala.groz{border-color:var(--bad);color:var(--bad)}
+.instal{background:var(--accent-soft);border-radius:10px;padding:10px 14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;font-size:.88rem}
+.instal-akcje{display:flex;gap:8px;align-items:center}
+.koniec{text-align:center;display:grid;gap:10px;justify-items:center}
+
+/* ludziki */
+.ludzik{position:fixed;right:10px;bottom:calc(12px + env(safe-area-inset-bottom,0px));display:flex;align-items:flex-end;gap:4px;z-index:50;max-width:calc(100% - 20px);transform:translateY(40px) scale(.6);transform-origin:100% 100%;opacity:0;visibility:hidden;transition:transform .55s cubic-bezier(.2,1.35,.4,1),opacity .25s,visibility 0s .55s;pointer-events:none}
+.ludzik.widac{transform:none;opacity:1;visibility:visible;transition:transform .55s cubic-bezier(.2,1.35,.4,1),opacity .25s;pointer-events:auto}
+.postac{position:relative;flex:none;width:96px;height:96px}
+.postac svg{width:100%;height:100%;overflow:visible}
+.dymek{background:var(--surface);color:var(--ink);border:2px solid var(--ink);border-radius:16px 16px 4px 16px;padding:10px 12px;font-size:.9rem;line-height:1.35;max-width:240px;box-shadow:0 8px 22px var(--cien);display:grid;gap:8px;margin-bottom:36px}
+.dymek strong{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.dymek .akcje{display:flex;gap:6px;flex-wrap:wrap}
+.dymek .btn-mala.glowny{background:var(--accent);color:var(--surface);border-color:var(--accent)}
+.puk{position:absolute;font:800 .8rem var(--f-ui);color:var(--bad);opacity:0;pointer-events:none}
+.puk.p1{left:-8px;top:6px}.puk.p2{left:-2px;top:-12px}
+.pukanie .puk.p1{animation:pukpuk .9s .05s}
+.pukanie .puk.p2{animation:pukpuk .9s .45s}
+@keyframes pukpuk{0%{opacity:0;transform:scale(.4)}20%{opacity:1;transform:scale(1.15)}70%{opacity:1}100%{opacity:0;transform:translateY(-10px)}}
+.reka{transform-box:fill-box;transform-origin:85% 85%}
+.pukanie .reka{animation:stuk .2s 5}
+@keyframes stuk{50%{transform:rotate(-30deg)}}
+.pukanie .cialo{animation:drgaj .2s 5}
+@keyframes drgaj{50%{transform:translateX(-2px)}}
+.para{animation:para 2.4s infinite ease-in-out}
+@keyframes para{0%,100%{transform:translateY(0);opacity:.8}50%{transform:translateY(-4px);opacity:.35}}
+.mruga{animation:mrug 4s infinite;transform-box:fill-box;transform-origin:center}
+@keyframes mrug{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+.radosc .postac{animation:skok .5s 3}
+@keyframes skok{50%{transform:translateY(-12px)}}
+
+@media (max-width:420px){.oceny .btn{padding:11px 6px;font-size:.88rem}.pytanie{font-size:1.1rem}.postac{width:80px;height:80px}.dymek{max-width:200px}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Zamówienia i finanse publiczne</h1>
+    <p class="sub" id="opis"></p>
+  </header>
+
+  <div class="instal" id="instal" hidden>
+    <span id="instal-tekst">Zainstaluj quiz jako aplikację – będzie działał bez internetu.</span>
+    <span class="instal-akcje"><button class="btn-mala" id="instal-btn" hidden>Zainstaluj</button><button class="link" id="instal-x">Ukryj</button></span>
+  </div>
+  <div class="pomo" id="pomo" hidden><span id="pomo-faza"></span><b id="pomo-czas"></b><button class="link" id="pomo-stop">Zakończ</button></div>
+
+  <section class="stan" aria-label="Postęp nauki">
+    <div class="pasek" id="pasek" aria-hidden="true">
+      <span style="background:var(--ok)"></span><span style="background:var(--mid)"></span><span style="background:var(--bad)"></span>
+    </div>
+    <div class="liczby" id="liczby"></div>
+    <div class="plan" id="plan"></div>
+  </section>
+
+  <section aria-label="Sposób nauki">
+    <p class="etykieta">Jak się uczysz</p>
+    <div class="sposoby" id="sposoby"></div>
+  </section>
+
+  <section aria-label="Które pytania" id="sekcja-tryby">
+    <p class="etykieta">Które pytania</p>
+    <div class="tryby" role="group">
+      <button class="tryb" data-tryb="plan">📅 Plan na dziś</button>
+      <button class="tryb" data-tryb="nauka">Nauka (trudne częściej)</button>
+      <button class="tryb" data-tryb="kolej">Po kolei</button>
+      <button class="tryb" data-tryb="trudne">Tylko do powtórki</button>
+      <button class="tryb" data-tryb="slabe">📊 Słabe punkty</button>
+    </div>
+  </section>
+
+  <article class="karta" id="karta" aria-live="polite"></article>
+
+  <details class="lista" id="lista">
+    <summary>Wszystkie pytania</summary>
+    <ol id="lista-ol"></ol>
+  </details>
+
+  <details class="lista ustawienia" id="ustawienia">
+    <summary>⚙ Ustawienia</summary>
+    <div class="ust">
+      <div class="ust-rzad"><span>Ludziki i głos</span>
+        <span class="potw"><button class="btn-mala" id="op-ludziki"></button><button class="btn-mala" id="op-glos"></button></span></div>
+      <div class="ust-rzad"><span>Krótki quiz po każdym pytaniu</span><button class="btn-mala" id="op-quiz"></button></div>
+      <div class="ust-rzad"><label for="lektor">Lektor</label>
+        <span class="potw"><select id="lektor" class="pole"></select><button class="btn-mala" id="lektor-test">▶ Posłuchaj</button></span></div>
+      <p class="sub" id="lektor-info"></p>
+      <div class="ust-rzad"><span>Twoje obrazki ludzików 💜</span>
+        <span class="potw"><label class="btn-mala" for="obrazki-plik">📷 Dodaj obrazki</label><input type="file" id="obrazki-plik" accept="image/*" multiple hidden><button class="btn-mala" id="obrazki-usun" hidden>Usuń obrazki</button></span></div>
+      <div class="miniatury" id="miniatury"></div>
+      <p class="sub">Obrazki zostają tylko w tym telefonie i nie trafiają na stronę. Ludziki pokażą się wtedy z Twoimi obrazkami.</p>
+    </div>
+  </details>
+
+  <div class="stopka">
+    <span id="zapis">Postęp zapisuje się na tym telefonie.</span>
+    <span class="potw" id="reset-box"></span>
+  </div>
+</div>
+
+<div class="ludzik" id="ludzik" aria-live="polite">
+  <div class="dymek" id="dymek"></div>
+  <div class="postac" id="postac"></div>
+</div>
+
+<script>
+const PYTANIA = [
+{nr:1, k:["5 404 000 euro","140 000 euro","216 000 euro","bez VAT","obronności i bezpieczeństwa","sektorowymi"],
+ q:"Jaka jest wartość progów unijnych dla robót budowlanych, dostaw i usług w przypadku zamówień klasycznych?",
+ a:`<p>W przypadku zamówień klasycznych progi unijne zależą od rodzaju zamówienia oraz zamawiającego i są określane w euro, bez VAT. Należy rozróżnić zamówienia na roboty budowlane od zamówień na dostawy i usługi, dla których obowiązują odrębne progi.</p>
+<p>Na lata 2026–2027 progi wynoszą:</p>
+<ul><li>5 404 000 euro dla robót budowlanych,</li><li>140 000 euro dla dostaw i usług udzielanych przez instytucje administracji centralnej oraz</li><li>216 000 euro dla pozostałych zamawiających publicznych (kwoty netto).</li></ul>
+<p>Zamówienia klasyczne to zamówienia publiczne udzielane przez zamawiających, które nie są zamówieniami w dziedzinach obronności i bezpieczeństwa ani zamówieniami sektorowymi, zgodnie z ustawą Prawo zamówień publicznych.</p>`},
+{nr:2, k:["klasyczne","sektorowe","obronności i bezpieczeństwa","roboty budowlane, dostawy i usługi"],
+ q:"Wymień i krótko omów rodzaje zamówień publicznych.",
+ a:`<p>Wyróżnia się:</p>
+<ul><li>zamówienia klasyczne (inne niż sektorowe oraz w dziedzinach obronności i bezpieczeństwa),</li><li>zamówienia sektorowe (związane z określoną działalnością sektorową, np. w energetyce lub transporcie) oraz</li><li>zamówienia w dziedzinach obronności i bezpieczeństwa (dotyczące m.in. sprzętu wojskowego i newralgicznego).</li></ul>
+<p>Ze względu na przedmiot zamówienia wyróżnia się roboty budowlane, dostawy i usługi.</p>`},
+{nr:3, k:["art. 376","przetargu nieograniczonego","przetargu ograniczonego","sektorowych negocjacji z ogłoszeniem","dialogu konkurencyjnego","partnerstwa innowacyjnego","negocjacje bez ogłoszenia","zamówienie z wolnej ręki"],
+ q:"W jakich trybach zamawiający może udzielić zamówienia sektorowego?",
+ a:`<p>(Zgodnie z art. 376 Pzp): Zamawiający sektorowy udziela zamówienia w trybie przetargu nieograniczonego, przetargu ograniczonego, sektorowych negocjacji z ogłoszeniem, dialogu konkurencyjnego lub partnerstwa innowacyjnego. W przypadkach określonych w ustawie może również zastosować negocjacje bez ogłoszenia lub zamówienie z wolnej ręki.</p>`},
+{nr:4, k:["art. 4 pkt 1 i 2","30 dni","Biuletynie Zamówień Publicznych","przedmiocie i rodzaju","przewidywanym trybie","orientacyjnej wartości","przewidywanym terminie wszczęcia"],
+ q:"Kto i kiedy sporządza plan postępowań o udzielenie zamówień i jakie informacje zawiera w planie?",
+ a:`<p>Plan postępowań o udzielenie zamówień sporządzają zamawiający publiczni, o których mowa w art. 4 pkt 1 i 2 Pzp, czyli jednostki sektora finansów publicznych oraz inne państwowe jednostki organizacyjne nieposiadające osobowości prawnej, w terminie do 30 dni od przyjęcia budżetu lub planu finansowego, a następnie publikują go w Biuletynie Zamówień Publicznych i na swojej stronie internetowej.</p>
+<p>Plan zawiera informacje o przedmiocie i rodzaju zamówienia (roboty budowlane, dostawy lub usługi), przewidywanym trybie lub procedurze udzielenia zamówienia, orientacyjnej wartości oraz przewidywanym terminie wszczęcia postępowania.</p>`,
+ n:`<p>Zgodnie z art. 4 pkt 1 i 2 ustawy Prawo zamówień publicznych (Pzp) zamawiający publiczni to:</p>
+<ul><li>Art. 4 pkt 1 – jednostki sektora finansów publicznych w rozumieniu ustawy o finansach publicznych, np. urzędy gmin, ministerstwa, szkoły publiczne i szpitale publiczne.</li><li>Art. 4 pkt 2 – inne państwowe jednostki organizacyjne nieposiadające osobowości prawnej, np. jednostki administracji państwowej działające bez osobowości prawnej.</li></ul>
+<p>Do zapamiętania na egzamin: są to podmioty publiczne zobowiązane do stosowania Pzp, jeśli udzielają zamówień objętych zakresem tej ustawy.</p>`},
+{nr:5, k:["zawarcia umowy","unieważnienia postępowania"],
+ q:"Wskaż, kiedy kończy się postępowanie o udzielenie zamówienia.",
+ a:`<p>Postępowanie o udzielenie zamówienia publicznego kończy się z chwilą zawarcia umowy w sprawie zamówienia publicznego albo unieważnienia postępowania.</p>`},
+{nr:6, k:["wymianie pieniędzy za konkretne świadczenie","bez bezpośredniego świadczenia wzajemnego","dotacji","ekwiwalentne"],
+ q:"Ekwiwalentne i transferowe strumienie pieniężne – proszę określić cechy charakterystyczne i wskazać przykłady.",
+ a:`<ul><li>Ekwiwalentne strumienie pieniężne polegają na wymianie pieniędzy za konkretne świadczenie, np. zapłacie wykonawcy za budowę drogi lub dostawę komputerów;</li><li>Transferowe strumienie pieniężne polegają na przekazaniu środków bez bezpośredniego świadczenia wzajemnego, np. dotacji.</li></ul>
+<p>W zamówieniach publicznych typowe są strumienie ekwiwalentne, ponieważ zamawiający płaci za roboty budowlane, dostawy lub usługi.</p>`,
+ n:`<p><b>Ekwiwalentne</b> – zamawiający płaci wykonawcy za konkretne świadczenie, np. budowę drogi, dostawę komputerów lub sprzątanie urzędu.</p>
+<p><b>Transferowe</b> – przekazanie środków publicznych bez bezpośredniego świadczenia wzajemnego, np. dotacja dla organizacji pozarządowej; co do zasady nie jest to zamówienie publiczne, jeśli nie zachodzą przesłanki ustawowe.</p>
+<p>Najprościej: w zamówieniach publicznych dominuje wymiana pieniędzy na konkretne roboty budowlane, dostawy lub usługi, czyli strumienie ekwiwalentne.</p>`},
+{nr:7, k:["zadania publiczne","spółki komunalne","art. 9 ustawy o finansach publicznych","ZUS i KRUS"],
+ q:"Sektor publiczny a sektor finansów publicznych.",
+ a:`<p>Sektor publiczny obejmuje podmioty realizujące zadania publiczne, np. ministerstwa, urzędy gmin oraz spółki komunalne, takie jak miejskie przedsiębiorstwa wodociągowe i spółki transportu publicznego.</p>
+<p>Sektor finansów publicznych, zgodnie z art. 9 ustawy o finansach publicznych, obejmuje m.in. organy władzy publicznej, jednostki samorządu terytorialnego (gminy, powiaty, województwa), jednostki budżetowe (np. szkoły publiczne), samorządowe zakłady budżetowe, agencje wykonawcze, ZUS i KRUS.</p>`,
+ n:`<p>Sektor publiczny obejmuje podmioty realizujące zadania publiczne, np. ministerstwa, urzędy gmin, szkoły publiczne oraz spółki komunalne, takie jak miejskie przedsiębiorstwa wodociągowe i spółki transportu publicznego. Sektor finansów publicznych obejmuje jednostki wymienione w art. 9 ustawy o finansach publicznych, np. ministerstwa, gminy, jednostki budżetowe, publiczne szkoły i ZUS, dlatego <b>sektor finansów publicznych jest pojęciem węższym niż sektor publiczny</b>.</p>`},
+{nr:8, k:["wydatki państwa przewyższają jego dochody","finansowanie kolejnych deficytów","obligacji i bonów skarbowych","kredytów i pożyczek"],
+ q:"Przyczyny powstawania oraz instrumenty finansowania deficytu i długu publicznego.",
+ a:`<p>Deficyt publiczny powstaje, gdy wydatki państwa przewyższają jego dochody, np. wskutek spadku wpływów podatkowych, kryzysu gospodarczego lub wzrostu wydatków na świadczenia społeczne i obronność, a dług publiczny narasta m.in. przez finansowanie kolejnych deficytów.</p>
+<p>Instrumentami finansowania są przede wszystkim emisja obligacji i bonów skarbowych oraz zaciąganie kredytów i pożyczek krajowych lub zagranicznych.</p>`,
+ n:`<ul><li><b>Przyczyny deficytu:</b> spadek wpływów z podatków, wzrost wydatków na świadczenia społeczne, obronność lub ochronę zdrowia, kryzys gospodarczy.</li><li><b>Instrumenty finansowania:</b> emisja obligacji skarbowych (np. obligacji 10-letnich), emisja bonów skarbowych, zaciąganie kredytów i pożyczek, np. od banków lub instytucji międzynarodowych.</li></ul>
+<p>Najprościej: państwo ma za mało pieniędzy na wydatki, więc pożycza je, np. emitując obligacje, które inwestorzy kupują, a państwo zobowiązuje się je wykupić wraz z odsetkami.</p>`},
+{nr:9, k:["oszczędność","efektywność","celowość","kontrolę i audyt","najlepszy stosunek jakości do ceny"],
+ q:"Proszę wymienić i scharakteryzować metody racjonalizacji wydatków publicznych.",
+ a:`<p>Metody racjonalizacji wydatków publicznych obejmują:</p>
+<ul><li>oszczędność (ograniczanie zbędnych kosztów),</li><li>efektywność (uzyskiwanie najlepszych rezultatów przy danych nakładach),</li><li>celowość (wydatkowanie środków zgodnie z potrzebami publicznymi) oraz</li><li>kontrolę i audyt (sprawdzanie prawidłowości i zasadności wydatków).</li></ul>
+<p>W zamówieniach publicznych racjonalizację wspierają analiza potrzeb i wymagań, konkurencyjność postępowań oraz wybór oferty zapewniającej najlepszy stosunek jakości do ceny.</p>`},
+{nr:10, k:["podmiot, na rzecz którego","własne oświadczenie","Protokół odbioru","Poświadczenie należytego wykonania","Umowa"],
+ q:"Kto może wystawić wykonawcy referencje za wykonane usługi czy dostawy?",
+ a:`<p>Referencje za wykonane dostawy lub usługi wystawia podmiot, na rzecz którego były one realizowane, np. urząd gminy, szkoła lub przedsiębiorstwo prywatne.</p>
+<p>Jeżeli wykonawca z przyczyn od siebie niezależnych nie może uzyskać referencji ani innych dokumentów, może przedstawić własne oświadczenie potwierdzające należyte wykonanie zamówienia.</p>
+<p>Przykładowe inne dowody, które wykonawca może przedstawić zgodnie z Pzp, gdy nie może uzyskać referencji, to:</p>
+<ul><li>Protokół odbioru wykonanej usługi lub dostawy, podpisany przez odbiorcę.</li><li>Poświadczenie należytego wykonania wystawione przez klienta.</li><li>Umowa wraz z dokumentami potwierdzającymi jej realizację, np. fakturami i potwierdzeniami odbioru.</li></ul>`},
+];
+const PLANOWANE = 90;
+
+/* poziomy: 0 = nowe, 1 = nie umiem, 2 = prawie, 3 = umiem */
+const ETYKIETY = {0:"Nowe",1:"Nie umiem",2:"Prawie",3:"Umiem"};
+const KOLORY = {0:"var(--new)",1:"var(--bad)",2:"var(--mid)",3:"var(--ok)"};
+const TLA = {0:"var(--accent-soft)",1:"var(--bad-soft)",2:"var(--mid-soft)",3:"var(--ok-soft)"};
+const SPOSOBY = [
+  {id:"fiszki", ik:"🃏", nazwa:"Fiszki", opis:"pytanie → odpowiedź"},
+  {id:"luki", ik:"🧩", nazwa:"Luki", opis:"odkrywasz słowa-klucze"},
+  {id:"pisz", ik:"✍️", nazwa:"Napisz z pamięci", opis:"wpisujesz, program sprawdza"},
+  {id:"sluchaj", ik:"🎧", nazwa:"Słuchanie", opis:"bez rąk, np. w drodze"},
+  {id:"egzamin", ik:"📝", nazwa:"Egzamin próbny", opis:"losowe pytania i ocena"},
+  {id:"sciaga", ik:"📄", nazwa:"Ściąga", opis:"same najważniejsze słowa"},
+  {id:"slabe", ik:"📊", nazwa:"Słabe punkty", opis:"czego najczęściej brakuje"},
+];
+const KLUCZ = "quiz-pzp-v1";
+
+const STAN_POCZ = () => ({p:{}, tryb:"nauka", sposob:"fiszki", krok:0, ostatnie:[], biezace:null, dni:[], ostatniaWizyta:0, ocenione:0, seriaUmiem:0, plan:{egzamin:""}, klucze:{}, dzis:null, pomo:null, sciagaSlabe:false, planOglosz:"", opcje:{ludziki:true, glos:true, quiz:true, tempo:.95, myslenie:8, lektor:""}});
+let stan = STAN_POCZ();
+try { const z = JSON.parse(localStorage.getItem(KLUCZ) || "null"); if (z && z.p) { stan = Object.assign(stan, z); stan.opcje = Object.assign(STAN_POCZ().opcje, z.opcje || {}); stan.plan = Object.assign({egzamin:""}, z.plan || {}); stan.klucze = z.klucze || {}; } } catch(e) {}
+let pamiecDziala = true;
+function zapisz(){
+  try { localStorage.setItem(KLUCZ, JSON.stringify(stan)); }
+  catch(e){ if (pamiecDziala){ pamiecDziala = false; document.getElementById("zapis").textContent = "Ta przeglądarka nie pozwala zapisać postępu – po zamknięciu strony zacznie się od nowa."; } }
+}
+const poziom = nr => (stan.p[nr] && stan.p[nr].l) || 0;
+const pytanie = nr => PYTANIA.find(x => x.nr === nr);
+const czekaj = ms => new Promise(r => setTimeout(r, ms));
+const dzisiaj = () => { const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); };
+
+function liczniki(){ const c = {0:0,1:0,2:0,3:0}; PYTANIA.forEach(q => c[poziom(q.nr)]++); return c; }
+function seriaDni(){
+  const zb = new Set(stan.dni); let n = 0; const d = new Date();
+  if (!zb.has(dzisiaj())) d.setDate(d.getDate() - 1);
+  for (;;) { const s = d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); if (!zb.has(s)) break; n++; d.setDate(d.getDate() - 1); }
+  return n;
+}
+
+/* ---------- plan do egzaminu: powtórki w rosnących odstępach (1 → 2 → 5 → 11 → 25 dni) ---------- */
+const DZIEN = 864e5;
+/* polska odmiana: 1 pytanie, 2–4 pytania, 5+ pytań (12–14 zawsze „pytań”) */
+const odm = (n, [jedno, kilka, wiele]) => n === 1 ? jedno : (n % 10 >= 2 && n % 10 <= 4 && !(n % 100 >= 12 && n % 100 <= 14)) ? kilka : wiele;
+const poczatekDnia = (ts = Date.now()) => { const d = new Date(ts); d.setHours(0, 0, 0, 0); return d.getTime(); };
+const koniecDnia = () => poczatekDnia() + DZIEN - 1;
+function dniDoEgzaminu(){
+  if (!stan.plan.egzamin) return null;
+  const [r, m, d] = stan.plan.egzamin.split("-").map(Number);
+  return Math.round((new Date(r, m - 1, d).getTime() - poczatekDnia()) / DZIEN);
+}
+function terminy(nr, l){
+  const stare = stan.p[nr] || {};
+  const iv = l === 1 ? 0 : l === 2 ? 1 : (stare.l === 3 ? Math.min(30, Math.max(3, Math.round((stare.iv || 2) * 2.3))) : 2);
+  let due = l === 1 ? Date.now() + 5 * 60e3 : poczatekDnia() + iv * DZIEN;
+  const doE = dniDoEgzaminu();
+  if (doE != null && doE > 1 && iv > 0) due = Math.min(due, poczatekDnia() + (doE - 1) * DZIEN); // ostatnia powtórka najpóźniej dzień przed egzaminem
+  return {iv, due};
+}
+function termin(nr){
+  const p = stan.p[nr]; if (!p) return null;
+  return p.due || (p.t || 0) + ({1:0, 2:1, 3:3}[p.l] || 0) * DZIEN;
+}
+function planDzis(){
+  const dzis = dzisiaj(), doE = dniDoEgzaminu();
+  const nowe = PYTANIA.filter(q => !stan.p[q.nr]);
+  const noweDzis = PYTANIA.filter(q => stan.p[q.nr] && stan.p[q.nr].f === dzis).length;
+  let limit = 10;
+  if (doE != null && doE >= 0) limit = doE <= 2 ? nowe.length + noweDzis : Math.ceil((nowe.length + noweDzis) / (doE - 2));
+  const ileNowych = Math.max(0, Math.min(nowe.length, limit - noweDzis));
+  const powtorki = PYTANIA.filter(q => stan.p[q.nr] && termin(q.nr) <= koniecDnia());
+  const zrobione = stan.dzis && stan.dzis.d === dzis ? stan.dzis.n : 0;
+  return {doE, limit, ileNowych, nowe: nowe.slice(0, ileNowych), powtorki, zrobione, zostalo: ileNowych + powtorki.length};
+}
+function notujKlucz(nr, klucz, ok){
+  const id = nr + "|" + klucz, v = stan.klucze[id] || {b:0, d:0};
+  if (ok) v.d++; else v.b++;
+  stan.klucze[id] = v;
+}
+const czySlaby = (nr, x) => { const v = stan.klucze[nr + "|" + x]; return !!v && v.b > v.d; };
+const slabePytania = () => PYTANIA.filter(q => [...new Set(q.k || [])].some(x => czySlaby(q.nr, x)));
+
+function wybierzNastepne(){
+  if (stan.tryb === "plan"){
+    const pl = planDzis(), kol = {1:0, 2:1, 3:2, 0:3};
+    const powt = pl.powtorki.slice().sort((a, b) => kol[poziom(a.nr)] - kol[poziom(b.nr)] || termin(a.nr) - termin(b.nr));
+    const kolejka = [...powt, ...pl.nowe];
+    if (!kolejka.length) return null;
+    const omin = new Set(stan.ostatnie.slice(-2));
+    return (kolejka.find(q => !omin.has(q.nr)) || kolejka[0]).nr;
+  }
+  const pool = stan.tryb === "trudne" ? PYTANIA.filter(q => poziom(q.nr) === 1 || poziom(q.nr) === 2)
+    : stan.tryb === "slabe" ? slabePytania() : PYTANIA;
+  if (!pool.length) return null;
+  if (stan.tryb === "kolej"){
+    const i = PYTANIA.findIndex(q => q.nr === stan.biezace);
+    return PYTANIA[(i + 1) % PYTANIA.length].nr;
+  }
+  const priorytet = {1:0, 0:1, 2:2, 3:3};
+  const omin = new Set(stan.ostatnie.slice(-Math.min(3, pool.length - 1)));
+  const kand = pool.filter(q => !omin.has(q.nr));
+  const lista = (kand.length ? kand : pool).slice().sort((a,b) => {
+    const pa = priorytet[poziom(a.nr)], pb = priorytet[poziom(b.nr)];
+    if (pa !== pb) return pa - pb;
+    const ta = (stan.p[a.nr] && stan.p[a.nr].t) || 0, tb = (stan.p[b.nr] && stan.p[b.nr].t) || 0;
+    return ta - tb || a.nr - b.nr;
+  });
+  if (stan.tryb === "nauka" && stan.krok % 4 === 3){
+    const znane = lista.filter(q => poziom(q.nr) === 3);
+    if (znane.length) return znane[0].nr;
+  }
+  return lista[0].nr;
+}
+
+function zapiszOcene(nr, l){
+  const d = dzisiaj(), stare = stan.p[nr];
+  stan.p[nr] = Object.assign({l, t: Date.now(), f: stare ? (stare.f || "") : d}, terminy(nr, l));
+  if (!stan.dni.includes(d)) stan.dni = stan.dni.concat(d).slice(-120);
+  stan.dzis = stan.dzis && stan.dzis.d === d ? {d, n: stan.dzis.n + 1} : {d, n: 1};
+  stan.ocenione++;
+  stan.seriaUmiem = l === 3 ? stan.seriaUmiem + 1 : 0;
+  if (stan.ocenione % 10 === 0) ludzikCieszy(losuj(TEKSTY.brawo10).replace("{n}", stan.ocenione));
+  else if (stan.seriaUmiem === 5) ludzikCieszy(losuj(TEKSTY.seria));
+}
+function przejdzDalej(){
+  stan.ostatnie = stan.ostatnie.concat(stan.biezace).slice(-5);
+  stan.krok++;
+  stan.biezace = wybierzNastepne();
+  if (stan.tryb === "plan" && stan.biezace == null && stan.planOglosz !== dzisiaj()){
+    stan.planOglosz = dzisiaj();
+    ludzikCieszy("✅ Ola, plan na dziś zrobiony! 대박! 💜 Odpocznij albo poucz się dalej.");
+  }
+  zapisz();
+}
+function ocen(l){
+  const q = pytanie(stan.biezace);
+  zapiszOcene(q.nr, l);
+  const zadania = stan.opcje.quiz ? zrobQuiz(q) : [];
+  if (!zadania.length) { przejdzDalej(); rysuj(); return; }
+  zapisz(); rysujStan(); rysujListe();
+  kartaQuiz(document.getElementById("karta"), q, zadania, l);
+}
+
+/* ---------- krótki quiz po pytaniu ----------
+   Zdanie z odpowiedzi z wyciętym słowem-kluczem; błędne opcje to słowa-klucze z INNYCH pytań,
+   więc quiz nie wymyśla żadnej nowej treści. */
+const potasuj = a => { const b = a.slice(); for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
+function zrobQuiz(q){
+  /* skróty (np., m.in., art.) nie kończą zdania: kropkę chowamy pod znacznikiem na czas dzielenia */
+  const zdania = tekstZ(q.a).replace(/\b(np|m\.in|art|pkt|ust|tj|tzw|ok)\.(?=\s)/gi, "$1#KR#")
+    .replace(/\s(oraz|lub|i)\.(\s|$)/g, " $1$2").replace(/([.;:!?])\s+/g, "$1\n").split("\n")
+    .map(z => z.replace(/#KR#/g, ".")).filter(z => z.trim());
+  const uzyte = new Set(), wynik = [];
+  for (const klucz of potasuj([...new Set(q.k || [])])){
+    if (wynik.length >= 2) break;
+    const zd = zdania.find(z => z.includes(klucz) && !uzyte.has(z));
+    if (!zd) continue;
+    uzyte.add(zd);
+    /* krótki punkt z listy bez kontekstu nic nie mówi – dokładamy zdanie przed nim */
+    const nr = zdania.indexOf(zd);
+    const caly = zd.length < 70 && nr > 0 ? zdania[nr - 1] + " " + zd : zd;
+    const i = caly.lastIndexOf(klucz);
+    let przed = caly.slice(0, i), po = caly.slice(i + klucz.length);
+    if (przed.length > 130) przed = "…" + przed.slice(-130).replace(/^\S*\s/, "");
+    if (po.length > 110) po = po.slice(0, 110).replace(/\s\S*$/, "") + "…";
+    const typ = x => /euro/.test(x) ? "kwota" : /\d/.test(x) ? "liczba" : "slowa", t = typ(klucz), niski = klucz.toLowerCase();
+    const pasuje = x => x.toLowerCase() !== niski && !caly.includes(x);
+    /* najlepsze błędne opcje to inne słowa-klucze z TEGO pytania (np. inne progi), potem z pozostałych */
+    const swoje = [...new Set(q.k)].filter(pasuje), obce = [...new Set(PYTANIA.filter(x => x.nr !== q.nr).flatMap(x => x.k || []))].filter(pasuje);
+    const kolejka = [...potasuj(swoje.filter(x => typ(x) === t)), ...potasuj(obce.filter(x => typ(x) === t)), ...potasuj(swoje), ...potasuj(obce)];
+    const zle = [...new Set(kolejka)].slice(0, 2);
+    if (zle.length < 2) continue;
+    wynik.push({przed, po, dobra: klucz, opcje: potasuj([klucz, ...zle])});
+  }
+  return wynik;
+}
+function kartaQuiz(k, q, zadania, ocena){
+  const esc = t => t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+  k.innerHTML = `<div class="karta-gora"><span>⚡ Szybki sprawdzian · pytanie ${q.nr}</span><span id="qz-licz">0 / ${zadania.length}</span></div>
+    <p class="sub">Uzupełnij lukę słowem z odpowiedzi, której właśnie się uczyłaś.</p>
+    ${zadania.map((z, i) => `<div class="zadanie" data-i="${i}"><p>${esc(z.przed)}<span class="luka">?</span>${esc(z.po)}</p>
+      <div class="opcje">${z.opcje.map(o => `<button class="opcja" data-o="${esc(o)}">${esc(o)}</button>`).join("")}</div></div>`).join("")}
+    <p class="sub" id="qz-wynik" hidden></p>
+    <button class="btn pokaz" id="qz-dalej" hidden>Dalej →</button>
+    <div class="nawig"><button class="link" id="qz-pomin">Pomiń sprawdzian →</button></div>`;
+  let odp = 0, dobrze = 0;
+  const dalej = () => { przejdzDalej(); rysuj(); };
+  k.querySelectorAll(".zadanie").forEach(box => {
+    const z = zadania[+box.dataset.i];
+    box.querySelectorAll(".opcja").forEach(b => b.onclick = () => {
+      const ok = b.dataset.o === z.dobra;
+      box.querySelectorAll(".opcja").forEach(x => { x.disabled = true; if (x.dataset.o === z.dobra) x.classList.add("dobra"); });
+      if (!ok) b.classList.add("zla");
+      box.querySelector(".luka").textContent = z.dobra;
+      odp++; if (ok) dobrze++;
+      notujKlucz(q.nr, z.dobra, ok); zapisz();
+      document.getElementById("qz-licz").textContent = `${odp} / ${zadania.length}`;
+      if (odp === zadania.length){
+        const w = document.getElementById("qz-wynik"); w.hidden = false;
+        let t = dobrze === zadania.length ? `Komplet, Ola: ${dobrze} z ${zadania.length} 💜` : `${dobrze} z ${zadania.length} dobrze.`;
+        if (ocena === 3 && dobrze === 0){ Object.assign(stan.p[q.nr], {l:2}, terminy(q.nr, 2)); zapisz(); rysujStan(); rysujListe(); t += " Oznaczyłaś „Umiem”, ale sprawdzian poszedł słabo, więc to pytanie wróci szybciej."; }
+        w.textContent = t;
+        const d = document.getElementById("qz-dalej"); d.hidden = false; d.onclick = dalej; d.focus();
+      }
+    });
+  });
+  document.getElementById("qz-pomin").onclick = dalej;
+}
+
+/* ---------- mowa: czytanie na głos ---------- */
+const TTS = "speechSynthesis" in window;
+let glosPL = null, glosyPL = [];
+/* najlepiej brzmią głosy „naturalne/neuronowe/online” i głosy Google; systemowe są bardziej robotyczne */
+function ocenGlos(v){
+  const n = v.name.toLowerCase(); let s = 0;
+  if (/natural|neural|online|enhanced|premium|wavenet|siri/.test(n)) s += 4;
+  if (/google/.test(n)) s += 2;
+  if (/zosia|ewa|paulina|agata|marek|krzysztof/.test(n)) s += 1;
+  if (/^pl-pl/i.test(v.lang)) s += .5;
+  return s;
+}
+function wybierzGlos(){
+  try {
+    glosyPL = speechSynthesis.getVoices().filter(x => /^pl/i.test(x.lang)).sort((a,b) => ocenGlos(b) - ocenGlos(a));
+    glosPL = glosyPL.find(v => v.name === stan.opcje.lektor) || glosyPL[0] || null;
+    if (typeof rysujLektora === "function") rysujLektora();
+  } catch(e) {}
+}
+if (TTS){ wybierzGlos(); try { speechSynthesis.onvoiceschanged = wybierzGlos; } catch(e) {} }
+function doMowy(t){
+  return t.replace(/\bm\.in\./g, "między innymi").replace(/\bnp\./g, "na przykład").replace(/\b[Aa]rt\./g, "artykuł")
+    .replace(/\bpkt\b/g, "punkt").replace(/\bPzp\b/g, "pe zet pe").replace(/\bust\./g, "ustęp").replace(/\bVAT\b/g, "wat")
+    .replace(/\bZUS\b/g, "zus").replace(/\bKRUS\b/g, "krus").replace(/(\d)\s*[–-]\s*(\d)/g, "$1 do $2")
+    .replace(/\(/g, ", ").replace(/\)/g, ", ").replace(/[[\]]/g, " ").replace(/\s–\s/g, ", ")
+    .replace(/\s*,\s*([,.;:])/g, "$1").replace(/,\s*,/g, ",").replace(/\s{2,}/g, " ");
+}
+function tekstZ(html){
+  const d = document.createElement("div"); d.innerHTML = html;
+  d.querySelectorAll("li").forEach(li => li.append(". "));
+  return d.textContent.replace(/\s+/g, " ").replace(/[,;]\s*\./g, ".").replace(/\.\s*\./g, ".").trim();
+}
+let mowaId = 0;
+function mow(tekst, wymus){
+  return new Promise(res => {
+    if (!TTS || (!stan.opcje.glos && !wymus)) { res(); return; }
+    const id = mowaId;
+    const zdania = doMowy(tekst).replace(/([.;:!?])\s+/g, "$1\n").split("\n").filter(z => z.trim());
+    let i = 0;
+    const dalej = () => {
+      if (id !== mowaId || i >= zdania.length) { res(); return; }
+      const u = new SpeechSynthesisUtterance(zdania[i++]);
+      u.lang = "pl-PL"; if (glosPL) u.voice = glosPL; u.rate = stan.opcje.tempo;
+      u.pitch = 1.02;
+      const pauza = () => setTimeout(dalej, /[:]$/.test(zdania[i - 1]) ? 200 : 380);
+      u.onend = pauza; u.onerror = dalej;
+      try { speechSynthesis.speak(u); } catch(e) { res(); }
+    };
+    dalej();
+  });
+}
+function ucisz(){ mowaId++; if (TTS) try { speechSynthesis.cancel(); } catch(e) {} }
+
+/* ---------- luki i słowa-klucze ---------- */
+function oznacz(el, klucze){
+  if (!klucze || !klucze.length) return 0;
+  const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const re = new RegExp("(" + klucze.slice().sort((a,b) => b.length - a.length).map(esc).join("|") + ")", "g");
+  const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), wezly = [];
+  while (w.nextNode()) wezly.push(w.currentNode);
+  let n = 0;
+  wezly.forEach(t => {
+    if (t.parentElement.closest(".notka")) return;
+    const czesci = t.nodeValue.split(re);
+    if (czesci.length < 2) return;
+    const frag = document.createDocumentFragment();
+    czesci.forEach((p, i) => {
+      if (i % 2){ const m = document.createElement("mark"); m.className = "k"; m.textContent = p; frag.appendChild(m); n++; }
+      else if (p) frag.appendChild(document.createTextNode(p));
+    });
+    t.replaceWith(frag);
+  });
+  return n;
+}
+
+/* ---------- elementy karty ---------- */
+const gora = (q, dopisek) => `<div class="karta-gora"><span>${dopisek || "Pytanie " + q.nr}</span>
+  <span class="znacznik" style="background:${TLA[poziom(q.nr)]};color:${KOLORY[poziom(q.nr)]}">${ETYKIETY[poziom(q.nr)]}</span></div>
+  <h2 class="pytanie">${q.q}</h2>`;
+const odpHTML = (q, klasa, notkaOtwarta) => `<div class="odp${klasa ? " " + klasa : ""}" id="odp">${q.a}${q.n ? `<details class="notka"${notkaOtwarta ? " open" : ""}><summary>Prościej / do zapamiętania</summary>${q.n}</details>` : ""}</div>`;
+const ocenyHTML = sug => `<div class="oceny">
+  <button class="btn o-bad${sug === 1 ? " sug" : ""}" data-l="1">Nie umiem<small>wróci szybko</small></button>
+  <button class="btn o-mid${sug === 2 ? " sug" : ""}" data-l="2">Prawie<small>wróci później</small></button>
+  <button class="btn o-ok${sug === 3 ? " sug" : ""}" data-l="3">Umiem<small>rzadko</small></button></div>`;
+const pominHTML = `<div class="nawig"><button class="link" id="pomin">Pomiń →</button></div>`;
+function podepnij(k, naOcene){
+  k.querySelectorAll(".oceny .btn").forEach(b => b.onclick = () => (naOcene || ocen)(+b.dataset.l));
+  const p = k.querySelector("#pomin"); if (p) p.onclick = () => { ucisz(); przejdzDalej(); rysuj(); };
+}
+function brakPytan(k){
+  if (stan.tryb === "plan"){
+    k.innerHTML = `<div class="koniec"><p class="pytanie">✅ Plan na dziś zrobiony!</p>
+      <p class="sub">Jutro czekają kolejne pytania i powtórki. Możesz odpocząć albo poćwiczyć dalej.</p>
+      <div class="rzad"><button class="btn drugi" id="do-egz">📝 Egzamin próbny</button><button class="btn pokaz" id="do-nauki">Ucz się dalej</button></div></div>`;
+    document.getElementById("do-nauki").onclick = () => ustawTryb("nauka");
+    document.getElementById("do-egz").onclick = () => ustawSposob("egzamin");
+    return;
+  }
+  if (stan.tryb === "slabe"){
+    k.innerHTML = `<div class="koniec"><p class="pytanie">Brak słabych punktów 💜</p>
+      <p class="sub">Zbierają się z krótkich sprawdzianów i z „Napisz z pamięci”. Wróć tu, kiedy coś pójdzie gorzej.</p>
+      <button class="btn pokaz" id="do-nauki">Wróć do nauki</button></div>`;
+    document.getElementById("do-nauki").onclick = () => ustawTryb("nauka");
+    return;
+  }
+  k.innerHTML = `<div class="koniec"><p class="pytanie">Nie ma nic do powtórki.</p>
+    <p class="sub">Każde pytanie jest oznaczone jako „Umiem”. Przełącz na „Nauka”, żeby utrwalić całość.</p>
+    <button class="btn pokaz" id="do-nauki">Wróć do nauki</button></div>`;
+  document.getElementById("do-nauki").onclick = () => ustawTryb("nauka");
+}
+
+/* 🃏 fiszki */
+function kartaFiszki(k, q, odkryta){
+  k.innerHTML = gora(q) + (odkryta ? odpHTML(q, "", true) + ocenyHTML()
+    : `<p class="sub">Odpowiedz w myślach albo na głos, potem sprawdź.</p><button class="btn pokaz" id="pokaz">Pokaż odpowiedź</button>`) + pominHTML;
+  if (odkryta) oznacz(document.getElementById("odp"), q.k);
+  else document.getElementById("pokaz").onclick = () => kartaFiszki(k, q, true);
+  podepnij(k);
+}
+
+/* ✍️ napisz z pamięci */
+function norm(s){
+  return s.toLowerCase().replace(/ł/g, "l").normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .replace(/(\d)[\s.](?=\d{3}\b)/g, "$1").replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
+}
+/* czy słowo-klucz padło w odpowiedzi; porównujemy rdzenie słów, żeby odmiana („przetarg nieograniczony”) też się liczyła */
+function powiedziano(klucz, tekstN){
+  const tokeny = tekstN.split(" ");
+  const slowa = norm(klucz).split(" ").filter(w => w.length >= 3 || /\d/.test(w));
+  if (!slowa.length) return tekstN.includes(norm(klucz));
+  let ok = 0;
+  slowa.forEach(w => {
+    if (/\d/.test(w)) { if (tekstN.replace(/ /g, "").includes(w)) ok++; return; }
+    const rdzen = w.length <= 4 ? w : w.slice(0, Math.min(7, Math.max(4, w.length - 3)));
+    if (tokeny.some(t => t.startsWith(rdzen))) ok++;
+  });
+  return ok / slowa.length >= 0.6;
+}
+const szkice = {};
+function kartaPisz(k, q){
+  k.innerHTML = gora(q) + `<label class="sub" for="pisz-pole">Napisz odpowiedź własnymi słowami, mogą być same punkty. Program sprawdzi, czy padły najważniejsze rzeczy.</label>
+    <textarea id="pisz-pole" class="pole-pisz" placeholder="Twoja odpowiedź…"></textarea>
+    <div class="rzad"><button class="btn drugi" id="pisz-bez">Pokaż bez pisania</button><button class="btn pokaz" id="pisz-sprawdz">Sprawdź</button></div>` + pominHTML;
+  const pole = document.getElementById("pisz-pole");
+  pole.value = szkice[q.nr] || "";
+  pole.oninput = () => { szkice[q.nr] = pole.value; };
+  document.getElementById("pisz-sprawdz").onclick = () => { if (!pole.value.trim()) { pole.focus(); return; } wynikPisz(k, q, pole.value); };
+  document.getElementById("pisz-bez").onclick = () => kartaFiszki(k, q, true);
+  podepnij(k);
+}
+function wynikPisz(k, q, tekst){
+  const tN = norm(tekst), unik = [...new Set(q.k || [])];
+  const traf = unik.filter(x => powiedziano(x, tN)), brak = unik.filter(x => !traf.includes(x));
+  unik.forEach(x => notujKlucz(q.nr, x, traf.includes(x))); zapisz();
+  const pct = unik.length ? traf.length / unik.length : 0, sug = pct >= .8 ? 3 : pct >= .4 ? 2 : 1;
+  const kol = sug === 3 ? "ok" : sug === 2 ? "mid" : "bad";
+  const pochwala = sug === 3 ? "Świetnie, Ola! 💜" : sug === 2 ? "Nieźle, jeszcze trochę." : "Do powtórki.";
+  k.innerHTML = gora(q) + `<div class="wynik" style="background:var(--${kol}-soft)">
+      <b style="color:var(--${kol})">${pochwala} Napisałaś ${traf.length} z ${unik.length} najważniejszych rzeczy.</b>
+      ${brak.length ? `<span>Brakowało: ${brak.join(" · ")}</span>` : `<span>Wszystkie słowa-klucze są w Twojej odpowiedzi.</span>`}
+    </div>
+    <div><p class="etykieta">Twoja odpowiedź</p><div class="zapis-mowy">${tekst.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</div></div>`
+    + odpHTML(q, "", false) + `<p class="sub">Program podpowiada ocenę (obwódka), ale decydujesz Ty.</p>` + ocenyHTML(sug)
+    + `<div class="nawig"><button class="link" id="popraw">✏️ Popraw i sprawdź jeszcze raz</button><button class="link" id="pomin">Pomiń →</button></div>`;
+  const odp = document.getElementById("odp"); oznacz(odp, q.k);
+  odp.querySelectorAll("mark.k").forEach(m => m.classList.add(traf.includes(m.textContent) ? "traf" : "brak"));
+  document.getElementById("popraw").onclick = () => kartaPisz(k, q);
+  podepnij(k, l => { delete szkice[q.nr]; ocen(l); });
+}
+
+/* 📄 ściąga ostatniej chwili */
+function kartaSciaga(k){
+  const tylko = !!stan.sciagaSlabe, lista = PYTANIA.filter(q => !tylko || poziom(q.nr) !== 3);
+  k.innerHTML = `<div class="karta-gora"><span>📄 Ściąga ostatniej chwili</span><span>${lista.length} z ${PYTANIA.length}</span></div>
+    <p class="sub">Same najważniejsze słowa z każdego pytania. Na czerwono te, które najczęściej Ci uciekają.</p>
+    <div class="tryby"><button class="tryb" data-sc="0" aria-pressed="${!tylko}">Wszystkie</button><button class="tryb" data-sc="1" aria-pressed="${tylko}">Bez tych, które umiem</button></div>
+    <div class="sciaga">${lista.map(q => `<div class="sc-poz"><p class="sc-pyt"><span class="nr">${q.nr}.</span> ${q.q}</p>
+      <div class="chipy">${[...new Set(q.k || [])].map(x => `<span class="chip${czySlaby(q.nr, x) ? " slaby" : ""}">${x}</span>`).join("")}</div>
+      <details><summary>Cała odpowiedź</summary><div class="odp">${q.a}</div></details></div>`).join("") || `<p class="sub">Wszystko umiesz! 💜</p>`}</div>`;
+  k.querySelectorAll("[data-sc]").forEach(b => b.onclick = () => { stan.sciagaSlabe = b.dataset.sc === "1"; zapisz(); kartaSciaga(k); });
+}
+
+/* 📊 słabe punkty */
+function kartaSlabe(k){
+  const wpisy = Object.entries(stan.klucze).map(([id, v]) => {
+    const i = id.indexOf("|"); return {nr: +id.slice(0, i), klucz: id.slice(i + 1), b: v.b, d: v.d};
+  }).filter(w => w.b > w.d && pytanie(w.nr)).sort((a, b) => (b.b - b.d) - (a.b - a.d) || b.b - a.b);
+  if (!wpisy.length){
+    k.innerHTML = `<div class="karta-gora"><span>📊 Słabe punkty</span></div>
+      <p class="pytanie">Ola, na razie czysto 💜</p>
+      <p class="sub">Tu zbierają się słowa-klucze, których brakowało w krótkich sprawdzianach i w „Napisz z pamięci”. Poucz się trochę i zajrzyj ponownie.</p>`;
+    return;
+  }
+  const ilePyt = new Set(wpisy.map(w => w.nr)).size;
+  k.innerHTML = `<div class="karta-gora"><span>📊 Słabe punkty</span><span>${wpisy.length} ${odm(wpisy.length, ["słowo", "słowa", "słów"])} · ${ilePyt} ${odm(ilePyt, ["pytanie", "pytania", "pytań"])}</span></div>
+    <p class="sub">Tego najczęściej brakuje w Twoich odpowiedziach. Znika z listy, kiedy trafisz więcej razy, niż się pomylisz.</p>
+    <div>${wpisy.slice(0, 40).map(w => `<div class="slaby-wiersz"><span class="chip slaby">${w.klucz}</span><span class="sub">pytanie ${w.nr} · źle ${w.b}× · dobrze ${w.d}×</span></div>`).join("")}</div>
+    <div class="rzad"><button class="btn drugi" id="sl-fiszki">🃏 Ćwicz w fiszkach</button><button class="btn pokaz" id="sl-luki">🧩 Ćwicz w lukach</button></div>`;
+  const cwicz = s => { stan.tryb = "slabe"; stan.biezace = null; ustawSposob(s); };
+  document.getElementById("sl-luki").onclick = () => cwicz("luki");
+  document.getElementById("sl-fiszki").onclick = () => cwicz("fiszki");
+}
+
+/* 🧩 luki */
+function kartaLuki(k, q){
+  k.innerHTML = gora(q) + `<div class="luki-pasek"><span id="licznik-luk"></span><button class="link" id="odkryj-all">Odkryj wszystkie</button></div>`
+    + odpHTML(q, "luki", false) + ocenyHTML() + pominHTML;
+  const odp = document.getElementById("odp"), ile = oznacz(odp, q.k);
+  const licz = () => {
+    const o = odp.querySelectorAll("mark.k.odkr").length;
+    document.getElementById("licznik-luk").textContent = o === ile ? `Wszystkie luki odkryte (${ile}). Jak poszło?` : `Odkryto ${o} z ${ile} – zgadnij, potem stuknij w pole`;
+  };
+  odp.querySelectorAll("mark.k").forEach(m => {
+    m.tabIndex = 0; m.setAttribute("role", "button"); m.setAttribute("aria-label", "Luka – odkryj");
+    const odkryj = () => { m.classList.add("odkr"); m.removeAttribute("aria-label"); m.removeAttribute("role"); licz(); };
+    m.onclick = odkryj;
+    m.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); odkryj(); } };
+  });
+  document.getElementById("odkryj-all").onclick = () => { odp.querySelectorAll("mark.k").forEach(m => m.classList.add("odkr")); licz(); };
+  licz();
+  podepnij(k);
+}
+
+/* 🎧 słuchanie */
+let sesjaSluch = 0, blokadaEkranu = null;
+function kartaSluchaj(k){
+  const q = pytanie(stan.biezace);
+  if (!TTS){ k.innerHTML = `<div class="info">Ten telefon nie potrafi czytać na głos. Wybierz inny sposób nauki.</div>`; return; }
+  const myslOpcje = [5, 8, 15], tempoOpcje = [[.85, "wolniej"], [.95, "normalnie"], [1.1, "szybciej"]];
+  k.innerHTML = `<div class="karta-gora"><span>🎧 Słuchanie</span><span id="sl-nr"></span></div>
+    <p class="faza" id="sl-faza">Gotowe do startu</p>
+    <h2 class="pytanie" id="sl-pyt">${q.q}</h2>
+    <div class="licznik" id="sl-licznik" hidden></div>
+    <p class="sub">Program czyta pytanie, daje Ci chwilę na odpowiedź w myślach, a potem czyta odpowiedź. I tak dalej, aż zatrzymasz. Zostaw aplikację otwartą: po zablokowaniu telefonu czytanie się zatrzyma (program sam pilnuje, żeby ekran nie gasł).</p>
+    <button class="btn pokaz" id="sl-start">▶ Zacznij słuchać</button>
+    <div class="pigulki">Czas na myślenie: ${myslOpcje.map(s => `<button class="tryb" data-mysl="${s}" aria-pressed="${stan.opcje.myslenie === s}">${s} s</button>`).join("")}</div>
+    <div class="pigulki">Tempo: ${tempoOpcje.map(([v, n]) => `<button class="tryb" data-tempo="${v}" aria-pressed="${stan.opcje.tempo === v}">${n}</button>`).join("")}</div>
+    <div class="pigulki">Lektor: <b id="sl-lektor">${glosPL ? glosPL.name : "domyślny głos telefonu"}</b><button class="link" id="sl-zmien">zmień lektora</button></div>`;
+  document.getElementById("sl-zmien").onclick = () => { const u = document.getElementById("ustawienia"); u.open = true; u.scrollIntoView({behavior:"smooth", block:"start"}); };
+  document.getElementById("sl-nr").textContent = "Pytanie " + q.nr;
+  k.querySelectorAll("[data-mysl]").forEach(b => b.onclick = () => { stan.opcje.myslenie = +b.dataset.mysl; zapisz(); k.querySelectorAll("[data-mysl]").forEach(x => x.setAttribute("aria-pressed", x === b)); });
+  k.querySelectorAll("[data-tempo]").forEach(b => b.onclick = () => { stan.opcje.tempo = +b.dataset.tempo; zapisz(); k.querySelectorAll("[data-tempo]").forEach(x => x.setAttribute("aria-pressed", x === b)); });
+  const btn = document.getElementById("sl-start");
+  btn.onclick = () => { if (sesjaSluch % 2) zatrzymajSluchanie(); else grajSluchanie(); };
+}
+function zatrzymajSluchanie(){
+  if (sesjaSluch % 2) sesjaSluch++;
+  ucisz();
+  try { blokadaEkranu && blokadaEkranu.release(); } catch(e) {} blokadaEkranu = null;
+  const b = document.getElementById("sl-start"); if (b) b.textContent = "▶ Słuchaj dalej";
+  const f = document.getElementById("sl-faza"); if (f) f.textContent = "Zatrzymane";
+  const l = document.getElementById("sl-licznik"); if (l) l.hidden = true;
+}
+async function grajSluchanie(){
+  const id = ++sesjaSluch;  // nieparzyste = gra
+  const zywe = () => id === sesjaSluch && stan.sposob === "sluchaj";
+  try { if (navigator.wakeLock) blokadaEkranu = await navigator.wakeLock.request("screen"); } catch(e) {}
+  document.getElementById("sl-start").textContent = "⏸ Zatrzymaj";
+  while (zywe()){
+    const q = pytanie(stan.biezace);
+    if (!q) { zatrzymajSluchanie(); document.getElementById("sl-faza").textContent = "Nie ma nic do powtórki"; break; }
+    document.getElementById("sl-pyt").textContent = q.q;
+    document.getElementById("sl-nr").textContent = "Pytanie " + q.nr;
+    const faza = document.getElementById("sl-faza"), licz = document.getElementById("sl-licznik");
+    faza.textContent = "Pytanie"; licz.hidden = true;
+    await mow(`Pytanie ${q.nr}. ${q.q}`, true); if (!zywe()) break;
+    faza.textContent = "Odpowiedz w myślach"; licz.hidden = false;
+    for (let s = stan.opcje.myslenie; s > 0 && zywe(); s--){ licz.textContent = s; await czekaj(1000); }
+    if (!zywe()) break;
+    licz.hidden = true; faza.textContent = "Odpowiedź";
+    dzwonek(); await czekaj(450); if (!zywe()) break;
+    await mow("Odpowiedź. " + tekstZ(q.a), true); if (!zywe()) break;
+    if (q.n) { faza.textContent = "Prościej, do zapamiętania"; await czekaj(500); await mow("A teraz prościej. " + tekstZ(q.n), true); if (!zywe()) break; }
+    await czekaj(1500); if (!zywe()) break;
+    przejdzDalej(); rysujStan(); rysujListe();
+  }
+}
+
+/* 📝 egzamin próbny */
+let egz = null;
+function kartaEgzamin(k){
+  if (!egz || egz.etap === "start"){
+    const ile = [5, 10, 20].filter(x => x < PYTANIA.length).concat(PYTANIA.length);
+    k.innerHTML = `<div class="karta-gora"><span>📝 Egzamin próbny</span></div>
+      <h2 class="pytanie">Losowe pytania, jak na prawdziwym egzaminie.</h2>
+      <p class="sub">Odpowiadasz, sprawdzasz, oceniasz się. Na koniec dostajesz ocenę i listę pytań do powtórki. Oceny zapisują się też w postępie.</p>
+      <div class="pigulki">Ile pytań: ${[...new Set(ile)].map(n => `<button class="tryb" data-ile="${n}" aria-pressed="${n === Math.min(10, PYTANIA.length)}">${n === PYTANIA.length ? "wszystkie (" + n + ")" : n}</button>`).join("")}</div>
+      <button class="btn pokaz" id="egz-start">Zaczynam egzamin</button>`;
+    let wybor = Math.min(10, PYTANIA.length);
+    k.querySelectorAll("[data-ile]").forEach(b => b.onclick = () => { wybor = +b.dataset.ile; k.querySelectorAll("[data-ile]").forEach(x => x.setAttribute("aria-pressed", x === b)); });
+    document.getElementById("egz-start").onclick = () => {
+      const lista = PYTANIA.map(q => q.nr).sort(() => Math.random() - .5).slice(0, wybor);
+      egz = {etap:"pyt", lista, i:0, wyniki:{}};
+      kartaEgzamin(k);
+    };
+    return;
+  }
+  if (egz.etap === "pyt"){
+    const q = pytanie(egz.lista[egz.i]), odkryta = egz.odkryta;
+    const nag = `Pytanie ${egz.i + 1} z ${egz.lista.length}`;
+    k.innerHTML = `<div class="postep-egz"><span style="width:${egz.i / egz.lista.length * 100}%"></span></div>` + gora(q, nag)
+      + (odkryta ? odpHTML(q, "", true) + ocenyHTML() : `<p class="sub">Spróbuj odpowiedzieć pełnym zdaniem, na głos albo w myślach.</p><button class="btn pokaz" id="pokaz">Sprawdź odpowiedź</button>`)
+      + `<div class="nawig"><button class="link" id="egz-przerwij">Przerwij egzamin</button></div>`;
+    if (odkryta) oznacz(document.getElementById("odp"), q.k);
+    else document.getElementById("pokaz").onclick = () => { egz.odkryta = true; kartaEgzamin(k); };
+    document.getElementById("egz-przerwij").onclick = () => { egz = null; kartaEgzamin(k); };
+    podepnij(k, l => {
+      egz.wyniki[q.nr] = l; zapiszOcene(q.nr, l); zapisz();
+      egz.odkryta = false; egz.i++;
+      if (egz.i >= egz.lista.length) egz.etap = "wynik";
+      rysujStan(); rysujListe(); kartaEgzamin(k);
+    });
+    return;
+  }
+  const w = Object.values(egz.wyniki), n = w.length;
+  const pkt = w.reduce((s, l) => s + (l === 3 ? 1 : l === 2 ? .5 : 0), 0), pct = n ? pkt / n : 0;
+  const [ocena, slowo] = pct >= .9 ? ["5", "bardzo dobry"] : pct >= .8 ? ["4,5", "dobry plus"] : pct >= .7 ? ["4", "dobry"] : pct >= .6 ? ["3,5", "dostateczny plus"] : pct >= .5 ? ["3", "dostateczny"] : ["2", "niedostateczny"];
+  const slabe = egz.lista.filter(nr => egz.wyniki[nr] !== 3);
+  k.innerHTML = `<div class="karta-gora"><span>📝 Wynik egzaminu</span><span>${Math.round(pct * 100)}%</span></div>
+    <p class="ocena-duza" style="color:${pct >= .5 ? "var(--ok)" : "var(--bad)"}">${ocena}</p>
+    <p class="sub" style="text-align:center">${slowo} · umiem ${w.filter(l => l === 3).length}, prawie ${w.filter(l => l === 2).length}, nie umiem ${w.filter(l => l === 1).length}</p>
+    ${slabe.length ? `<div><p class="etykieta">Do powtórki</p><ol class="sub" style="margin:0;padding-left:1.3em">${slabe.map(nr => `<li>${pytanie(nr).q}</li>`).join("")}</ol></div>` : ""}
+    <div class="rzad">${slabe.length ? `<button class="btn drugi" id="egz-slabe">Powtórz słabe pytania</button>` : ""}<button class="btn pokaz" id="egz-nowy">Nowy egzamin</button></div>`;
+  const s = document.getElementById("egz-slabe");
+  if (s) s.onclick = () => { egz = null; stan.tryb = "trudne"; ustawSposob("fiszki"); };
+  document.getElementById("egz-nowy").onclick = () => { egz = null; kartaEgzamin(k); };
+  if (!egz.ogloszono){ egz.ogloszono = true; ludzikCieszy(pct >= .8 ? "Ola, ocena " + ocena + "! Profesor Sowa bije brawo 👏" : pct >= .5 ? "Zdane, Ola! Jeszcze kilka powtórek i będzie piątka." : "Spokojnie, Ola, od tego jest egzamin próbny. Powtórzymy słabe pytania?"); }
+}
+
+/* ---------- rysowanie ---------- */
+function rysujStan(){
+  const c = liczniki(), n = PYTANIA.length;
+  const s = document.querySelectorAll("#pasek span");
+  [3,2,1].forEach((l,i) => s[i].style.width = (c[l] / n * 100) + "%");
+  const seria = seriaDni();
+  document.getElementById("liczby").innerHTML =
+    [3,2,1,0].map(l => `<span><i class="kropka" style="background:${KOLORY[l]}"></i>${ETYKIETY[l]}: <b>${c[l]}</b></span>`).join("")
+    + (seria ? `<span class="seria">🔥 Seria: ${seria} ${seria === 1 ? "dzień" : "dni"} nauki</span>` : "");
+  document.getElementById("opis").textContent = `Fiszki Oli na egzamin 💜 · ${n} z ${PLANOWANE} pytań · umiesz ${c[3]} z ${n}`;
+  document.querySelectorAll(".tryb[data-tryb]").forEach(b => b.setAttribute("aria-pressed", b.dataset.tryb === stan.tryb));
+  document.getElementById("sposoby").innerHTML = SPOSOBY.map(s =>
+    `<button class="sposob" data-sposob="${s.id}" aria-pressed="${s.id === stan.sposob}"><span class="ik">${s.ik}</span>${s.nazwa}<small>${s.opis}</small></button>`).join("");
+  document.querySelectorAll(".sposob").forEach(b => b.onclick = () => ustawSposob(b.dataset.sposob));
+  document.getElementById("sekcja-tryby").hidden = ["egzamin", "sciaga", "slabe"].includes(stan.sposob);
+  rysujPlan();
+  document.getElementById("op-ludziki").textContent = "Ludziki: " + (stan.opcje.ludziki ? "wł." : "wył.");
+  document.getElementById("op-glos").textContent = "Głos: " + (stan.opcje.glos ? "wł." : "wył.");
+  document.getElementById("op-quiz").textContent = stan.opcje.quiz ? "wł." : "wył.";
+}
+function rysujKarte(){
+  const k = document.getElementById("karta");
+  if (stan.sposob === "egzamin") return kartaEgzamin(k);
+  if (stan.sposob === "sciaga") return kartaSciaga(k);
+  if (stan.sposob === "slabe") return kartaSlabe(k);
+  if (stan.biezace == null) return brakPytan(k);
+  if (stan.sposob === "sluchaj") return kartaSluchaj(k);
+  const q = pytanie(stan.biezace);
+  if (stan.sposob === "luki") return kartaLuki(k, q);
+  if (stan.sposob === "pisz") return kartaPisz(k, q);
+  return kartaFiszki(k, q, false);
+}
+function rysujListe(){
+  document.getElementById("lista-ol").innerHTML = PYTANIA.map(q =>
+    `<li><button data-nr="${q.nr}"><span class="nr">${q.nr}.</span><i class="kropka" style="background:${KOLORY[poziom(q.nr)]}"></i><span>${q.q}</span></button></li>`).join("");
+  document.querySelectorAll("#lista-ol button").forEach(b => b.onclick = () => {
+    zatrzymajWszystko();
+    stan.biezace = +b.dataset.nr;
+    if (["egzamin", "sluchaj", "sciaga", "slabe"].includes(stan.sposob)) stan.sposob = "fiszki";
+    zapisz(); rysuj();
+    document.getElementById("karta").scrollIntoView({behavior:"smooth", block:"start"});
+  });
+}
+function rysuj(){ rysujStan(); rysujKarte(); rysujListe(); }
+
+function zatrzymajWszystko(){ zatrzymajSluchanie(); ucisz(); }
+function ustawSposob(s){ zatrzymajWszystko(); stan.sposob = s; if (stan.biezace == null) stan.biezace = wybierzNastepne(); zapisz(); rysuj(); }
+function ustawTryb(t){
+  zatrzymajWszystko();
+  stan.tryb = t;
+  const pasuje = stan.biezace != null && (t === "nauka" || t === "kolej");
+  if (!pasuje) stan.biezace = t === "kolej" ? PYTANIA[0].nr : wybierzNastepne();
+  zapisz(); rysuj();
+}
+document.querySelectorAll(".tryb[data-tryb]").forEach(b => b.onclick = () => ustawTryb(b.dataset.tryb));
+document.getElementById("op-ludziki").onclick = () => { stan.opcje.ludziki = !stan.opcje.ludziki; if (!stan.opcje.ludziki) schowajLudzika(); zapisz(); rysujStan(); };
+document.getElementById("op-glos").onclick = () => { stan.opcje.glos = !stan.opcje.glos; if (!stan.opcje.glos && stan.sposob !== "sluchaj") ucisz(); zapisz(); rysujStan(); };
+document.getElementById("op-quiz").onclick = () => { stan.opcje.quiz = !stan.opcje.quiz; zapisz(); rysujStan(); };
+
+/* ---------- panel planu ---------- */
+let formularzDaty = false;
+function rysujPlan(){
+  const el = document.getElementById("plan"), pl = planDzis();
+  const pomo = stan.pomo ? "" : `<button class="btn-mala" id="pomo-start">🍅 Sesja 25/5</button>`;
+  if (pl.doE == null || pl.doE < 0 || formularzDaty){
+    el.innerHTML = `<div class="plan-rzad"><span>📅 <b>Plan do egzaminu</b>: wpisz datę, a ułożę naukę na każdy dzień.</span></div>
+      <div class="plan-rzad"><span class="potw"><input type="date" id="data-egz" class="pole" min="${dzisiaj()}" value="${stan.plan.egzamin || ""}" aria-label="Data egzaminu">
+      <button class="btn-mala glowny" id="data-ok">Ustaw plan</button>${formularzDaty ? `<button class="link" id="data-anuluj">anuluj</button>` : ""}</span>${pomo}</div>
+      <p class="sub" id="data-blad" hidden></p>`;
+    document.getElementById("data-ok").onclick = () => {
+      const v = document.getElementById("data-egz").value, b = document.getElementById("data-blad");
+      if (!v || v < dzisiaj()) { b.hidden = false; b.textContent = "Wybierz dzień egzaminu: dziś albo później."; return; }
+      stan.plan.egzamin = v; formularzDaty = false; stan.tryb = "plan"; stan.biezace = wybierzNastepne(); zapisz(); rysuj();
+      const p2 = planDzis();
+      ludzikCieszy(`Ola, plan gotowy! Do egzaminu ${p2.doE} ${p2.doE === 1 ? "dzień" : "dni"}, dziennie ok. ${p2.limit} nowych pytań plus powtórki 💜`);
+    };
+    const an = document.getElementById("data-anuluj"); if (an) an.onclick = () => { formularzDaty = false; rysujPlan(); };
+  } else {
+    const wszystko = pl.zostalo + pl.zrobione, proc = wszystko ? pl.zrobione / wszystko : 1;
+    el.innerHTML = `<div class="plan-rzad"><span>📅 Egzamin ${pl.doE === 0 ? "<b>dziś</b>. Powodzenia! 💜" : `za <b>${pl.doE} ${pl.doE === 1 ? "dzień" : "dni"}</b>`} (${stan.plan.egzamin.split("-").reverse().join(".")})</span><button class="link" id="data-zmien">zmień datę</button></div>
+      <div class="plan-rzad"><span>${pl.zostalo ? `Na dziś zostało: <b>${pl.ileNowych} ${odm(pl.ileNowych, ["nowe", "nowe", "nowych"])}</b> + <b>${pl.powtorki.length} do powtórki</b>` : "✅ Plan na dziś zrobiony!"}</span><span class="sub">dziś: ${pl.zrobione} ${odm(pl.zrobione, ["odpowiedź", "odpowiedzi", "odpowiedzi"])}</span></div>
+      <div class="postep-egz"><span style="width:${proc * 100}%"></span></div>
+      <div class="plan-rzad">${stan.tryb !== "plan" && pl.zostalo ? `<button class="btn-mala glowny" id="plan-start">📅 Ucz się wg planu</button>` : "<span></span>"}${pomo}</div>`;
+    document.getElementById("data-zmien").onclick = () => { formularzDaty = true; rysujPlan(); };
+    const ps = document.getElementById("plan-start"); if (ps) ps.onclick = () => ustawTryb("plan");
+  }
+  const st = document.getElementById("pomo-start"); if (st) st.onclick = startPomo;
+}
+
+/* ---------- sesje 25/5 (pomodoro) ---------- */
+const POMO = {nauka: 25 * 60e3, przerwa: 5 * 60e3};
+function startPomo(){
+  stan.pomo = {faza: "nauka", koniec: Date.now() + POMO.nauka, n: 1}; zapisz(); rysujPomo(); rysujPlan();
+  pokazLudzika("🍅 Start, Ola! 25 minut skupienia, potem 5 minut przerwy. 화이팅!", {przyciski: false, czas: 5000});
+}
+function stopPomo(){ stan.pomo = null; zapisz(); rysujPomo(); rysujPlan(); }
+function rysujPomo(){
+  const el = document.getElementById("pomo"), p = stan.pomo;
+  if (!p) { el.hidden = true; return; }
+  el.hidden = false; el.className = "pomo " + p.faza;
+  const ms = Math.max(0, p.koniec - Date.now()), m = Math.floor(ms / 60e3), sek = Math.floor(ms / 1000) % 60;
+  document.getElementById("pomo-faza").textContent = (p.faza === "nauka" ? "🍅 Nauka" : "☕ Przerwa") + " · sesja " + p.n;
+  document.getElementById("pomo-czas").textContent = m + ":" + String(sek).padStart(2, "0");
+}
+document.getElementById("pomo-stop").onclick = stopPomo;
+setInterval(() => {
+  const p = stan.pomo; if (!p) return;
+  if (Date.now() >= p.koniec){
+    dzwonek();
+    if (p.faza === "nauka"){
+      p.faza = "przerwa"; p.koniec = Date.now() + POMO.przerwa; zatrzymajSluchanie();
+      pokazLudzika(losuj(TEKSTY.pomoPrzerwa), {puka: true, przyciski: false, czas: 15000});
+    } else {
+      p.faza = "nauka"; p.n++; p.koniec = Date.now() + POMO.nauka;
+      pokazLudzika(losuj(TEKSTY.pomoKoniec), {puka: true});
+    }
+    zapisz();
+  }
+  rysujPomo();
+}, 1000);
+
+/* ---------- lektor ---------- */
+function rysujLektora(){
+  const sel = document.getElementById("lektor"), info = document.getElementById("lektor-info");
+  if (!sel) return;
+  const esc = t => t.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+  if (!TTS){ sel.innerHTML = "<option>ten telefon nie czyta na głos</option>"; sel.disabled = true; info.textContent = ""; return; }
+  sel.innerHTML = glosyPL.length
+    ? glosyPL.map(v => `<option value="${esc(v.name)}"${glosPL && v.name === glosPL.name ? " selected" : ""}>${esc(v.name.replace(/^(Microsoft|Google)\s+/, ""))}${ocenGlos(v) >= 4 ? " ✨" : ""}</option>`).join("")
+    : "<option>domyślny głos telefonu</option>";
+  const najlepszy = glosyPL[0];
+  info.textContent = !najlepszy || ocenGlos(najlepszy) < 4
+    ? "Głos brzmi sztucznie? Doinstaluj lepszy polski głos. Android: Ustawienia → Zamiana tekstu na mowę → silnik Google → Polski → pobierz głos. iPhone: Ustawienia → Dostępność → Treść mówiona → Głosy → Polski → pobierz „Zosia (rozszerzony)” albo „Zosia (premium)”. Potem uruchom quiz ponownie."
+    : "Głosy z ✨ brzmią najbardziej naturalnie.";
+  const sl = document.getElementById("sl-lektor"); if (sl) sl.textContent = glosPL ? glosPL.name : "domyślny głos telefonu";
+}
+document.getElementById("lektor").onchange = e => { stan.opcje.lektor = e.target.value; glosPL = glosyPL.find(v => v.name === e.target.value) || glosPL; zapisz(); rysujLektora(); };
+document.getElementById("lektor-test").onclick = () => { ucisz(); mow("Cześć, Ola! Tak będę czytać pytania i odpowiedzi. Na lata 2026–2027 próg dla robót budowlanych wynosi 5 404 000 euro. Powodzenia na egzaminie!", true); };
+rysujLektora();
+
+const box = document.getElementById("reset-box");
+function przyciskReset(){
+  box.innerHTML = `<button class="btn-mala" id="reset">Zacznij od nowa</button>`;
+  document.getElementById("reset").onclick = () => {
+    box.innerHTML = `<span>Wyzerować cały postęp?</span>
+      <button class="btn-mala groz" id="tak">Tak, wyzeruj</button><button class="btn-mala" id="nie">Anuluj</button>`;
+    document.getElementById("tak").onclick = () => { zatrzymajWszystko(); const op = stan.opcje; stan = STAN_POCZ(); stan.opcje = op; stan.ostatniaWizyta = Date.now(); stan.biezace = wybierzNastepne(); egz = null; zapisz(); przyciskReset(); rysuj(); };
+    document.getElementById("nie").onclick = przyciskReset;
+  };
+}
+przyciskReset();
+
+document.addEventListener("keydown", e => {
+  if (e.target.closest("input,textarea")) return;
+  const pokaz = document.getElementById("pokaz");
+  if ((e.key === " " || e.key === "Enter") && pokaz && document.activeElement === document.body){ e.preventDefault(); pokaz.click(); }
+  if (["1","2","3"].includes(e.key)) { const b = document.querySelector(`.oceny .btn[data-l="${e.key}"]`); if (b) b.click(); }
+});
+
+/* ---------- ludziki ---------- */
+/* własne obrazki ludzików: tylko w tym telefonie, zmniejszone, żeby zmieściły się w pamięci przeglądarki */
+const KLUCZ_OBR = "quiz-pzp-obrazki", MAKS_OBR = 8;
+let obrazki = [];
+try { const o = JSON.parse(localStorage.getItem(KLUCZ_OBR) || "[]"); if (Array.isArray(o)) obrazki = o.filter(x => typeof x === "string" && x.startsWith("data:image/")); } catch(e) {}
+function zmniejsz(plik){
+  return new Promise((ok, zle) => {
+    const url = URL.createObjectURL(plik), img = new Image();
+    img.onload = () => {
+      const R = 220, c = document.createElement("canvas"); c.width = c.height = R;
+      const bok = Math.min(img.width, img.height);
+      c.getContext("2d").drawImage(img, (img.width - bok) / 2, (img.height - bok) / 2, bok, bok, 0, 0, R, R);
+      URL.revokeObjectURL(url); ok(c.toDataURL("image/jpeg", .82));
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); zle(new Error("obraz")); };
+    img.src = url;
+  });
+}
+function rysujMiniatury(komunikat){
+  document.getElementById("miniatury").innerHTML = obrazki.map(s => `<img src="${s}" alt="">`).join("") + (komunikat ? `<span class="sub">${komunikat}</span>` : "");
+  document.getElementById("obrazki-usun").hidden = !obrazki.length;
+}
+document.getElementById("obrazki-plik").onchange = async e => {
+  const pliki = [...e.target.files].slice(0, Math.max(0, MAKS_OBR - obrazki.length));
+  let blad = "";
+  for (const f of pliki){ try { obrazki.push(await zmniejsz(f)); } catch(er) { blad = "Któregoś pliku nie udało się otworzyć jako obrazka."; } }
+  try { localStorage.setItem(KLUCZ_OBR, JSON.stringify(obrazki)); }
+  catch(er) { obrazki = obrazki.slice(0, -pliki.length); blad = "Za mało miejsca w pamięci telefonu na te obrazki. Spróbuj mniej obrazków."; }
+  if (e.target.files.length > pliki.length) blad = blad || `Można dodać najwyżej ${MAKS_OBR} obrazków.`;
+  e.target.value = "";
+  rysujMiniatury(blad);
+  if (obrazki.length && !blad) pokazLudzika("Hej, Ola, to my, Twoja nowa ekipa wsparcia! 💜 화이팅!", {przyciski:false, czas:6000});
+};
+document.getElementById("obrazki-usun").onclick = () => { obrazki = []; try { localStorage.removeItem(KLUCZ_OBR); } catch(e) {} rysujMiniatury(); };
+rysujMiniatury();
+
+const POSTACIE = {
+  sowa: {imie:"Profesor Sowa", svg:`<svg viewBox="0 0 100 100" aria-hidden="true"><g class="cialo">
+    <ellipse cx="52" cy="62" rx="30" ry="32" fill="#8a5a3b"/><ellipse cx="52" cy="70" rx="19" ry="21" fill="#e8c9a2"/>
+    <path d="M40 74q4 3 8 0M52 80q4 3 8 0M44 86q4 3 8 0" stroke="#b98d63" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <circle cx="41" cy="48" r="11" fill="#fff"/><circle cx="63" cy="48" r="11" fill="#fff"/>
+    <g class="mruga"><circle cx="42" cy="49" r="5" fill="#1d2430"/><circle cx="62" cy="49" r="5" fill="#1d2430"/></g>
+    <circle cx="41" cy="48" r="12.5" fill="none" stroke="#1d2430" stroke-width="2.4"/><circle cx="63" cy="48" r="12.5" fill="none" stroke="#1d2430" stroke-width="2.4"/>
+    <path d="M53 48h-2" stroke="#1d2430" stroke-width="2.4"/><path d="M48 57l4 6 4-6z" fill="#f2a33a"/>
+    <path d="M28 30l24-10 24 10-24 10z" fill="#5a2d91"/><rect x="40" y="29" width="24" height="8" fill="#5a2d91"/>
+    <path d="M76 30v12" stroke="#f2c14e" stroke-width="2"/><circle cx="76" cy="43" r="2.6" fill="#f2c14e"/>
+    <ellipse cx="80" cy="66" rx="7" ry="15" fill="#6f4529" transform="rotate(18 80 66)"/>
+    <ellipse class="reka" cx="22" cy="55" rx="7" ry="15" fill="#6f4529" transform="rotate(35 22 55)"/>
+    <path d="M42 93h6M56 93h6" stroke="#f2a33a" stroke-width="3" stroke-linecap="round"/></g></svg>`},
+  paragraf: {imie:"Pan Paragraf", svg:`<svg viewBox="0 0 100 100" aria-hidden="true"><g class="cialo">
+    <rect x="26" y="22" width="48" height="62" rx="20" fill="#7b4fc4"/>
+    <text x="50" y="74" text-anchor="middle" font-family="Georgia,serif" font-size="40" font-weight="700" fill="#fff">§</text>
+    <circle cx="41" cy="36" r="6" fill="#fff"/><circle cx="59" cy="36" r="6" fill="#fff"/>
+    <g class="mruga"><circle cx="42" cy="37" r="3" fill="#1d2430"/><circle cx="60" cy="37" r="3" fill="#1d2430"/></g>
+    <path d="M44 45q6 5 12 0" stroke="#1d2430" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    <circle cx="35" cy="45" r="3" fill="#f39aa8" opacity=".7"/><circle cx="65" cy="45" r="3" fill="#f39aa8" opacity=".7"/>
+    <path class="reka" d="M27 50q-12 -2 -15 -14" stroke="#7b4fc4" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <path d="M73 52q10 6 10 16" stroke="#7b4fc4" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <rect x="76" y="66" width="14" height="11" rx="2" fill="#8a5a3b"/>
+    <path d="M40 84v8M60 84v8" stroke="#1d2430" stroke-width="5" stroke-linecap="round"/></g></svg>`},
+  serduszko: {imie:"Borahae 💜", svg:`<svg viewBox="0 0 100 100" aria-hidden="true"><g class="cialo">
+    <path d="M50 88C22 68 12 54 12 38c0-12 9-21 20-21 8 0 14 4 18 11 4-7 10-11 18-11 11 0 20 9 20 21 0 16-10 30-38 50z" fill="#8e5bd1"/>
+    <path d="M30 30q4-6 10-6" stroke="#c9a8f2" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <circle cx="39" cy="46" r="5" fill="#fff"/><circle cx="61" cy="46" r="5" fill="#fff"/>
+    <g class="mruga"><circle cx="40" cy="47" r="2.6" fill="#221a2e"/><circle cx="62" cy="47" r="2.6" fill="#221a2e"/></g>
+    <path d="M44 56q6 6 12 0" stroke="#221a2e" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+    <circle cx="32" cy="55" r="4" fill="#f5a6c8" opacity=".8"/><circle cx="68" cy="55" r="4" fill="#f5a6c8" opacity=".8"/>
+    <g class="reka"><path d="M14 46q-8-4-8-14" stroke="#8e5bd1" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <rect x="1" y="18" width="10" height="16" rx="5" fill="#ece6f3" stroke="#5a2d91" stroke-width="2"/><circle cx="6" cy="23" r="3" fill="#c9a8f2"/></g>
+    <path d="M86 46q8 2 8 12" stroke="#8e5bd1" stroke-width="5" fill="none" stroke-linecap="round"/></g></svg>`},
+  kawka: {imie:"Kawka", svg:`<svg viewBox="0 0 100 100" aria-hidden="true"><g class="cialo">
+    <path class="para" d="M40 18q-5 -6 0 -12M52 20q-5 -6 0 -12M64 18q-5 -6 0 -12" stroke="#9aa6b2" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M24 30h56l-6 52q-1 8 -9 8h-26q-8 0 -9 -8z" fill="#f4f1ec" stroke="#1d2430" stroke-width="2.4"/>
+    <path d="M24 30h56l-1.5 12h-53z" fill="#7a4b2e"/>
+    <path d="M80 44q14 0 12 14q-2 12 -15 10" stroke="#1d2430" stroke-width="5" fill="none"/>
+    <circle cx="42" cy="56" r="4" fill="#1d2430" class="mruga"/><circle cx="62" cy="56" r="4" fill="#1d2430" class="mruga"/>
+    <path d="M45 66q7 7 14 0" stroke="#1d2430" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+    <circle cx="35" cy="64" r="4" fill="#f39aa8" opacity=".7"/><circle cx="69" cy="64" r="4" fill="#f39aa8" opacity=".7"/>
+    <path class="reka" d="M26 54q-14 -4 -16 -18" stroke="#1d2430" stroke-width="4" fill="none" stroke-linecap="round"/></g></svg>`},
+};
+const TEKSTY = {
+  powitanie: ["Annyeong, Ola! 안녕! Puk, puk, czas na naukę 💜", "화이팅, Ola! Hwaiting! Dziś zdajemy kilka fiszek!", "Borahae 💜 보라해, Ola! A teraz do pytań, egzamin czeka.", "Puk puk! Fioletowa ekipa wsparcia Oli melduje się na naukę 💜", "Puk, puk! Ola, czas na naukę! 📚", "Puk puk! Kto tam? Zamówienia publiczne do Oli!", "Hej, Ola! Egzamin sam się nie zda. Kilka pytań?", "Puk puk! Ola, mam dla Ciebie świeże fiszki.", "Dzień dobry, Ola! Przerobimy dziś kilka pytań?", "Puk puk! Ola, progi unijne same się nie zapamiętają 😉"],
+  rano: ["Dzień dobry, Ola! Kawa jest, fiszki są. Zaczynamy?", "Puk puk! Ola, poranna powtórka to najlepsza powtórka."],
+  wieczor: ["Ola, wieczorna powtórka? Po niej śpi się mądrzej 😴", "Puk puk! Ola, jeszcze kilka pytań przed snem?"],
+  przerwa: ["Puk puk! Ola, nie było Cię {d} dni. Paragrafy już tęsknią!", "Halo, Ola! {d} dni przerwy. Zróbmy szybką powtórkę, żeby nic nie uciekło."],
+  bezczynnosc: ["Puk puk… Ola, jeszcze tu jesteś? Jedno pytanie i przerwa!", "Halo, halo, Ola! Fiszka czeka.", "Puk! Ola, pięć minut nauki teraz to mniej stresu przed egzaminem."],
+  brawo10: ["Daebak! 대박! Ola, już {n} odpowiedzi za Tobą 💜", "화이팅, Ola! {n} pytań przerobionych, tak trzymaj!", "Brawo, Ola! Już {n} odpowiedzi! 🎉", "Super tempo, Ola! {n} pytań przerobionych!", "Ola, rośnie z Ciebie ekspertka od Pzp! 💪 ({n} odpowiedzi)"],
+  pomoPrzerwa: ["☕ Przerwa, Ola! 5 minut: wstań, napij się wody 💧", "Puk puk! Ola, 25 minut za Tobą. Teraz przerwa, mózg właśnie układa wiedzę 🧠", "Przerwa, Ola! Rozciągnij się trochę. Borahae 💜"],
+  pomoKoniec: ["Koniec przerwy, Ola! Wracamy do nauki, 화이팅!", "Puk puk! Ola, przerwa minęła. Kolejne 25 minut?"],
+  seria: ["Pięć razy z rzędu „Umiem”! Ola, Profesor Sowa jest pod wrażeniem 🦉", "Pięć trafień pod rząd, Ola! Tak się zdaje egzaminy."],
+};
+const losuj = a => a[Math.floor(Math.random() * a.length)];
+const ludzik = document.getElementById("ludzik"), dymek = document.getElementById("dymek"), postac = document.getElementById("postac");
+let ludzikTimer = null, ostatniPuk = 0, ostatniRuch = Date.now(), aktywowano = false, actx = null;
+
+function dzwonek(){
+  if (!actx) return;
+  try {
+    [[660, 0], [880, .14]].forEach(([f, o]) => {
+      const t = actx.currentTime + o, osc = actx.createOscillator(), g = actx.createGain();
+      osc.type = "sine"; osc.frequency.value = f;
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.25, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + .5);
+      osc.connect(g).connect(actx.destination); osc.start(t); osc.stop(t + .55);
+    });
+  } catch(e) {}
+}
+function puknij(){
+  if (!actx || !stan.opcje.glos) return;
+  try {
+    [0, .2].forEach(o => {
+      const t = actx.currentTime + o, osc = actx.createOscillator(), g = actx.createGain();
+      osc.type = "triangle"; osc.frequency.setValueAtTime(180, t); osc.frequency.exponentialRampToValueAtTime(60, t + .1);
+      g.gain.setValueAtTime(.5, t); g.gain.exponentialRampToValueAtTime(.001, t + .14);
+      osc.connect(g).connect(actx.destination); osc.start(t); osc.stop(t + .15);
+    });
+  } catch(e) {}
+}
+function pokazLudzika(tekst, {puka = false, przyciski = true, czas = 0} = {}){
+  if (!stan.opcje.ludziki) return;
+  clearTimeout(ludzikTimer);
+  const wlasne = obrazki.length ? losuj(obrazki) : null;
+  const p = wlasne ? {imie:"💜 Ekipa wsparcia", svg:`<img src="${wlasne}" alt="">`} : POSTACIE[losuj(Object.keys(POSTACIE))];
+  postac.innerHTML = p.svg + `<span class="puk p1">PUK!</span><span class="puk p2">PUK!</span><span class="serca"><i>💜</i><i>💜</i><i>💜</i></span>`;
+  dymek.innerHTML = `<strong>${p.imie}</strong><span>${tekst}</span>` + (przyciski
+    ? `<span class="akcje"><button class="btn-mala glowny" id="ludz-tak">Zaczynamy!</button><button class="btn-mala" id="ludz-nie">Później</button></span>`
+    : `<span class="akcje"><button class="btn-mala" id="ludz-nie">Dzięki!</button></span>`);
+  ludzik.classList.remove("pukanie", "radosc");
+  void ludzik.offsetWidth;
+  ludzik.classList.add("widac", puka ? "pukanie" : "radosc");
+  if (puka) { ostatniPuk = Date.now(); puknij(); }
+  if (aktywowano && stan.opcje.glos && stan.sposob !== "sluchaj") { ucisz(); mow(tekst.replace(/[ᄀ-ᇿ㄰-㆏가-힯]/g, "").replace(/[^\p{L}\p{N}\s.,!?…„”-]/gu, "")); }
+  const tak = document.getElementById("ludz-tak");
+  if (tak) tak.onclick = () => { schowajLudzika(); document.getElementById("karta").scrollIntoView({behavior:"smooth", block:"start"}); };
+  document.getElementById("ludz-nie").onclick = schowajLudzika;
+  if (czas) ludzikTimer = setTimeout(schowajLudzika, czas);
+}
+function schowajLudzika(){ clearTimeout(ludzikTimer); ludzik.classList.remove("widac", "pukanie", "radosc"); }
+function ludzikCieszy(tekst){ pokazLudzika(tekst, {przyciski:false, czas:7000}); }
+
+["pointerdown", "keydown"].forEach(ev => document.addEventListener(ev, () => {
+  ostatniRuch = Date.now();
+  if (!aktywowano) { aktywowano = true; try { actx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {} }
+}, {passive: true}));
+
+setInterval(() => {
+  if (document.hidden || ludzik.classList.contains("widac") || sesjaSluch % 2) return;
+  if (Date.now() - ostatniRuch > 3 * 60e3 && Date.now() - ostatniPuk > 10 * 60e3) pokazLudzika(losuj(TEKSTY.bezczynnosc), {puka:true});
+}, 20e3);
+
+function powitaj(){
+  const teraz = Date.now(), przerwa = stan.ostatniaWizyta ? teraz - stan.ostatniaWizyta : Infinity;
+  stan.ostatniaWizyta = teraz; zapisz();
+  if (przerwa < 4 * 3600e3) return;
+  const dni = Math.floor(przerwa / 864e5), godz = new Date().getHours();
+  let t;
+  if (isFinite(przerwa) && dni >= 2) t = losuj(TEKSTY.przerwa).replace("{d}", dni);
+  else if (godz < 11) t = losuj(TEKSTY.rano.concat(TEKSTY.powitanie));
+  else if (godz >= 19) t = losuj(TEKSTY.wieczor.concat(TEKSTY.powitanie));
+  else t = losuj(TEKSTY.powitanie);
+  const pl = planDzis();
+  if (pl.doE != null && pl.doE >= 0 && pl.zostalo) t = `Puk puk! Ola, do egzaminu ${pl.doE} ${pl.doE === 1 ? "dzień" : "dni"}. Na dziś czeka ${pl.zostalo} ${odm(pl.zostalo, ["pytanie", "pytania", "pytań"])} 📅💜`;
+  setTimeout(() => pokazLudzika(t, {puka:true}), 1200);
+}
+document.addEventListener("visibilitychange", () => { if (!document.hidden) { if (Date.now() - stan.ostatniaWizyta > 4 * 3600e3) powitaj(); else { stan.ostatniaWizyta = Date.now(); zapisz(); } } });
+
+if (!SPOSOBY.some(s => s.id === stan.sposob)) stan.sposob = "fiszki";
+if (![.85, .95, 1.1].includes(stan.opcje.tempo)) stan.opcje.tempo = .95;
+if (stan.pomo && Date.now() - stan.pomo.koniec > 30 * 60e3) stan.pomo = null;
+rysujPomo();
+if (stan.biezace == null || !pytanie(stan.biezace)) stan.biezace = wybierzNastepne();
+powitaj();
+rysuj(false);
+
+/* ---- aplikacja: działanie bez internetu i instalacja ---- */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+}
+try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
+
+(function(){
+  const pasek = document.getElementById("instal"), btn = document.getElementById("instal-btn"), txt = document.getElementById("instal-tekst");
+  const zainstalowana = window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+  let ukryte = false; try { ukryte = localStorage.getItem("quiz-instal-ukryj") === "1"; } catch(e) {}
+  if (zainstalowana || ukryte) return;
+  let zdarzenie = null;
+  window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); zdarzenie = e; btn.hidden = false; pasek.hidden = false; });
+  btn.onclick = async () => { if (!zdarzenie) return; zdarzenie.prompt(); await zdarzenie.userChoice; zdarzenie = null; pasek.hidden = true; };
+  if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+    txt.textContent = "Żeby zainstalować: przycisk Udostępnij, potem „Do ekranu początkowego”.";
+    pasek.hidden = false;
+  }
+  document.getElementById("instal-x").onclick = () => { pasek.hidden = true; try { localStorage.setItem("quiz-instal-ukryj", "1"); } catch(e) {} };
+  window.addEventListener("appinstalled", () => { pasek.hidden = true; });
+})();
+</script>
+
+</body>
+</html>
