@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Zamówienia i finanse publiczne</title>
+<title>Paszport Oli</title>
 <meta name="theme-color" content="#6b3fa0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Quiz Oli">
+<meta name="apple-mobile-web-app-title" content="Paszport Oli">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="ikona-192.png">
 <link rel="apple-touch-icon" href="ikona-180.png">
@@ -20,7 +20,7 @@
 /* Układ: jedna kolumna jak karta egzaminacyjna; na górze stan nauki i wybór sposobu, w środku karta, w rogu ludziki. */
 :root{
   --bg:#f4f1f9; --surface:#ffffff; --ink:#221a2e; --muted:#665b74; --line:#e0d8ea;
-  --accent:#6b3fa0; --accent-soft:#efe6fa; --fiolet-mocny:#8e5bd1;
+  --accent:#6b3fa0; --accent-soft:#efe6fa; --fiolet-mocny:#8e5bd1; --niebo1:#f6ecff; --niebo2:#e2cdfa; --piasek:#ffe7c2; --lisc:#3f9b5a;
   --ok:#1f7a4d; --ok-soft:#e2f3ea; --mid:#a8670a; --mid-soft:#fbf0dc; --bad:#b0362f; --bad-soft:#f8e3e1;
   --new:#9aa6b2; --cien:rgba(15,30,45,.18);
   --f-read:"Literata", Georgia, "Times New Roman", serif;
@@ -28,12 +28,12 @@
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#15111c; --surface:#201a2a; --ink:#ece6f3; --muted:#a99db8; --line:#352c42;
-  --accent:#c4a3f0; --accent-soft:#33264a; --fiolet-mocny:#a97ce8;
+  --accent:#c4a3f0; --accent-soft:#33264a; --fiolet-mocny:#a97ce8; --niebo1:#1d1430; --niebo2:#3b2566; --piasek:#4a3a2a; --lisc:#5cbf7a;
   --ok:#5cc792; --ok-soft:#173327; --mid:#e6b45c; --mid-soft:#3a2d15; --bad:#ec8a82; --bad-soft:#3d1f1d;
   --new:#5f6c79; --cien:rgba(0,0,0,.5); color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#15111c; --surface:#201a2a; --ink:#ece6f3; --muted:#a99db8; --line:#352c42;
-  --accent:#c4a3f0; --accent-soft:#33264a; --fiolet-mocny:#a97ce8;
+  --accent:#c4a3f0; --accent-soft:#33264a; --fiolet-mocny:#a97ce8; --niebo1:#1d1430; --niebo2:#3b2566; --piasek:#4a3a2a; --lisc:#5cbf7a;
   --ok:#5cc792; --ok-soft:#173327; --mid:#e6b45c; --mid-soft:#3a2d15; --bad:#ec8a82; --bad-soft:#3d1f1d;
   --new:#5f6c79; --cien:rgba(0,0,0,.5); color-scheme:dark}
 
@@ -162,6 +162,50 @@ label.btn-mala{display:inline-block}
 .radosc .serca i,.pukanie .serca i{animation:serce 1.6s ease-out}
 .serca i:nth-child(2){left:30%;animation-delay:.25s!important}.serca i:nth-child(3){left:65%;animation-delay:.5s!important}
 @keyframes serce{0%{opacity:0;transform:translateY(0) scale(.6)}25%{opacity:1}100%{opacity:0;transform:translateY(-46px) scale(1.2)}}
+/* strona startowa */
+.powitalna{position:fixed;inset:0;z-index:100;display:grid;place-items:center;overflow:auto;
+  padding:calc(20px + env(safe-area-inset-top,0px)) 16px calc(20px + env(safe-area-inset-bottom,0px));
+  background:linear-gradient(180deg,var(--niebo1) 0%,var(--niebo2) 62%,var(--piasek) 100%);transition:opacity .45s,transform .45s}
+.powitalna.znika{opacity:0;transform:scale(1.05);pointer-events:none}
+.p-tresc{position:relative;z-index:1;display:grid;justify-items:center;gap:10px;text-align:center;width:100%;max-width:420px}
+.p-etykieta{margin:0;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--accent)}
+.p-tytul{margin:0;font-family:var(--f-read);font-weight:600;font-size:clamp(2.3rem,10vw,3.2rem);line-height:1.05;color:var(--ink)}
+.tancerka{width:min(250px,64vw);aspect-ratio:1;max-width:100%}
+.tancerka svg{width:100%;height:100%;overflow:visible}
+.p-haslo{margin:0;font-family:var(--f-read);font-size:1.1rem;text-wrap:balance}
+.p-stan{margin:0;color:var(--muted);font-size:.9rem;font-variant-numeric:tabular-nums}
+.p-btn{width:min(320px,100%);min-height:56px;border-radius:999px;font-size:1.15rem;box-shadow:0 10px 26px var(--cien)}
+.p-slonce{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));right:14px;width:min(90px,22vw);animation:slonce 14s linear infinite}
+.p-palma{position:absolute;bottom:0;width:min(150px,30vw)}
+.p-palma-l{left:-14px;transform-origin:50% 100%;animation:palma 4s ease-in-out infinite}
+.p-palma-p{right:-14px;transform:scaleX(-1);transform-origin:50% 100%;animation:palmaP 4.6s ease-in-out infinite}
+@keyframes slonce{to{transform:rotate(360deg)}}
+@keyframes palma{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(3deg)}}
+@keyframes palmaP{0%,100%{transform:scaleX(-1) rotate(-2deg)}50%{transform:scaleX(-1) rotate(3deg)}}
+.taniec{transform-box:view-box;transform-origin:100px 186px;animation:kolys 1.1s ease-in-out infinite}
+@keyframes kolys{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+.spodniczka{transform-box:view-box;transform-origin:100px 118px;animation:biodra .55s ease-in-out infinite}
+@keyframes biodra{0%,100%{transform:translateX(-5px) skewX(7deg)}50%{transform:translateX(5px) skewX(-7deg)}}
+.reka-l{transform-box:view-box;transform-origin:84px 90px;animation:rekaL 1.1s ease-in-out infinite}
+.reka-p{transform-box:view-box;transform-origin:116px 90px;animation:rekaP 1.1s ease-in-out infinite}
+@keyframes rekaL{0%,100%{transform:rotate(8deg)}50%{transform:rotate(-26deg)}}
+@keyframes rekaP{0%,100%{transform:rotate(26deg)}50%{transform:rotate(-8deg)}}
+.glowa{transform-box:view-box;transform-origin:100px 76px;animation:glowa 1.1s ease-in-out infinite}
+@keyframes glowa{0%,100%{transform:rotate(5deg)}50%{transform:rotate(-5deg)}}
+.nuty text{animation:nuta 2.2s ease-in-out infinite;opacity:0}
+.nuty text:nth-child(2){animation-delay:.7s}.nuty text:nth-child(3){animation-delay:1.4s}
+@keyframes nuta{0%{opacity:0;transform:translateY(8px)}30%{opacity:1}100%{opacity:0;transform:translateY(-16px)}}
+
+/* paszport z pieczątkami */
+.paszport-info{margin:0;padding:0 14px}
+.pieczatki{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:14px;padding:14px}
+.pieczatka{aspect-ratio:1;border:3px double var(--tusz);color:var(--tusz);border-radius:50%;display:grid;place-content:center;justify-items:center;gap:1px;text-align:center;padding:6px;transform:rotate(var(--obrot));font:700 .68rem/1.1 var(--f-ui);letter-spacing:.06em;text-transform:uppercase}
+.pieczatka:nth-child(even){border-radius:16px}
+.pieczatka .flaga{font-size:1.65rem;line-height:1.1}
+.pieczatka small{font-weight:500;font-size:.6rem;letter-spacing:.02em;opacity:.85}
+.pieczatka.zamknieta{--tusz:var(--muted);border-style:dashed;border-width:2px;opacity:.55}
+.pieczatka.nowa{animation:wbicie .7s cubic-bezier(.3,1.6,.5,1)}
+@keyframes wbicie{0%{transform:scale(2) rotate(var(--obrot));opacity:0}100%{transform:scale(1) rotate(var(--obrot));opacity:1}}
 .stopka{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;font-size:.8rem;color:var(--muted)}
 .potw{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .btn-mala{font:500 .8rem var(--f-ui);padding:6px 10px;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
@@ -200,14 +244,61 @@ label.btn-mala{display:inline-block}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
 </style>
 
+<div class="powitalna" id="powitalna" role="dialog" aria-labelledby="p-tytul">
+  <svg class="p-slonce" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="30" fill="#ffcf66"/><g stroke="#ffcf66" stroke-width="5" stroke-linecap="round"><path d="M50 4v10M50 86v10M4 50h10M86 50h10M17 17l7 7M76 76l7 7M17 83l7-7M76 24l7-7"/></g></svg>
+  <svg class="p-palma p-palma-l" viewBox="0 0 120 160" aria-hidden="true"><path d="M60 160 Q56 100 64 60" stroke="#8d6748" stroke-width="9" fill="none" stroke-linecap="round"/><g fill="var(--lisc)"><path d="M64 60 Q30 36 4 52 Q34 44 64 60z"/><path d="M64 60 Q60 22 36 6 Q58 30 64 60z"/><path d="M64 60 Q96 30 118 44 Q90 42 64 60z"/><path d="M64 60 Q100 64 112 92 Q92 70 64 60z"/><path d="M64 60 Q32 72 22 100 Q40 76 64 60z"/></g></svg>
+  <svg class="p-palma p-palma-p" viewBox="0 0 120 160" aria-hidden="true"><path d="M60 160 Q56 100 64 60" stroke="#8d6748" stroke-width="9" fill="none" stroke-linecap="round"/><g fill="var(--lisc)"><path d="M64 60 Q30 36 4 52 Q34 44 64 60z"/><path d="M64 60 Q60 22 36 6 Q58 30 64 60z"/><path d="M64 60 Q96 30 118 44 Q90 42 64 60z"/><path d="M64 60 Q100 64 112 92 Q92 70 64 60z"/><path d="M64 60 Q32 72 22 100 Q40 76 64 60z"/></g></svg>
+  <div class="p-tresc">
+    <p class="p-etykieta">✈️ Przepustka dookoła świata</p>
+    <h2 class="p-tytul" id="p-tytul">Paszport Oli</h2>
+    <div class="tancerka"><svg viewBox="0 0 200 200" role="img" aria-label="Tańcząca hawajska tancerka">
+  <ellipse cx="100" cy="190" rx="46" ry="7" fill="rgba(0,0,0,.14)"/>
+  <g class="taniec">
+    <path d="M90 150 L86 182" stroke="#e3a97f" stroke-width="9" stroke-linecap="round"/>
+    <path d="M110 150 L114 182" stroke="#e3a97f" stroke-width="9" stroke-linecap="round"/>
+    <ellipse cx="84" cy="184" rx="8" ry="4" fill="#d18f66"/><ellipse cx="116" cy="184" rx="8" ry="4" fill="#d18f66"/>
+    <g class="reka-l"><path d="M84 90 Q66 84 56 64" stroke="#e3a97f" stroke-width="8" fill="none" stroke-linecap="round"/><circle cx="55" cy="61" r="5" fill="#e3a97f"/></g>
+    <g class="reka-p"><path d="M116 90 Q134 84 144 64" stroke="#e3a97f" stroke-width="8" fill="none" stroke-linecap="round"/><circle cx="145" cy="61" r="5" fill="#e3a97f"/></g>
+    <rect x="82" y="80" width="36" height="42" rx="14" fill="#8e5bd1"/>
+    <path d="M86 98 q14 8 28 0" stroke="#c9a8f2" stroke-width="3" fill="none"/>
+    <g class="spodniczka">
+      <path d="M78 118 h44" stroke="#2f7d45" stroke-width="7" stroke-linecap="round"/>
+      <g stroke-width="5" stroke-linecap="round">
+        <path d="M76 120 L68 160" stroke="#5aa95b"/><path d="M82 120 L76 162" stroke="#9cc95a"/><path d="M88 120 L84 163" stroke="#5aa95b"/>
+        <path d="M94 120 L92 164" stroke="#c9d36b"/><path d="M100 120 L100 164" stroke="#5aa95b"/><path d="M106 120 L108 164" stroke="#9cc95a"/>
+        <path d="M112 120 L116 163" stroke="#5aa95b"/><path d="M118 120 L124 162" stroke="#c9d36b"/><path d="M124 120 L132 160" stroke="#5aa95b"/>
+      </g>
+    </g>
+    <g class="glowa">
+      <circle cx="100" cy="54" r="23" fill="#e8b48f"/>
+      <path d="M77 54 q0-26 23-27 q23 1 23 27 q-4-12-23-14 q-19 2-23 14z" fill="#3b2626"/>
+      <circle cx="118" cy="30" r="9" fill="#3b2626"/>
+      <g transform="translate(80 36)"><circle cx="0" cy="-6" r="5" fill="#f06292"/><circle cx="6" cy="-1" r="5" fill="#f06292"/><circle cx="4" cy="6" r="5" fill="#f06292"/><circle cx="-4" cy="6" r="5" fill="#f06292"/><circle cx="-6" cy="-1" r="5" fill="#f06292"/><circle r="3" fill="#ffd54f"/></g>
+      <path d="M90 55 q4 -4 8 0M104 55 q4 -4 8 0" stroke="#3b2626" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      <path d="M93 64 q7 6 14 0" stroke="#a0453b" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+      <circle cx="87" cy="62" r="3.5" fill="#f39aa8" opacity=".8"/><circle cx="113" cy="62" r="3.5" fill="#f39aa8" opacity=".8"/>
+    </g>
+    <g>
+      <circle cx="86" cy="82" r="4.5" fill="#f06292"/><circle cx="93" cy="86" r="4.5" fill="#ffd54f"/><circle cx="100" cy="88" r="4.5" fill="#ba68c8"/>
+      <circle cx="107" cy="86" r="4.5" fill="#ffd54f"/><circle cx="114" cy="82" r="4.5" fill="#f06292"/>
+    </g>
+  </g>
+  <g class="nuty" font-size="16" fill="#8e5bd1"><text x="22" y="40">♪</text><text x="168" y="30">♫</text><text x="176" y="96">♪</text></g>
+</svg></div>
+    <p class="p-haslo">Aloha, Ola! 🌺 Zdaj egzamin, a świat stoi otworem.</p>
+    <p class="p-stan" id="p-stan"></p>
+    <button class="btn pokaz p-btn" id="p-btn">Zaczynamy! 💜</button>
+  </div>
+</div>
+
 <div class="wrap">
   <header>
-    <h1>Zamówienia i finanse publiczne</h1>
+    <h1>🛂 Paszport Oli</h1>
     <p class="sub" id="opis"></p>
   </header>
 
   <div class="instal" id="instal" hidden>
-    <span id="instal-tekst">Zainstaluj quiz jako aplikację – będzie działał bez internetu.</span>
+    <span id="instal-tekst">Zainstaluj Paszport Oli jako aplikację – będzie działał bez internetu.</span>
     <span class="instal-akcje"><button class="btn-mala" id="instal-btn" hidden>Zainstaluj</button><button class="link" id="instal-x">Ukryj</button></span>
   </div>
   <div class="pomo" id="pomo" hidden><span id="pomo-faza"></span><b id="pomo-czas"></b><button class="link" id="pomo-stop">Zakończ</button></div>
@@ -219,6 +310,12 @@ label.btn-mala{display:inline-block}
     <div class="liczby" id="liczby"></div>
     <div class="plan" id="plan"></div>
   </section>
+
+  <details class="lista paszport" id="paszport">
+    <summary id="paszport-tytul">🛂 Paszport Oli</summary>
+    <p class="sub paszport-info" id="paszport-info"></p>
+    <div class="pieczatki" id="pieczatki"></div>
+  </details>
 
   <section aria-label="Sposób nauki">
     <p class="etykieta">Jak się uczysz</p>
@@ -343,9 +440,9 @@ const SPOSOBY = [
 ];
 const KLUCZ = "quiz-pzp-v1";
 
-const STAN_POCZ = () => ({p:{}, tryb:"nauka", sposob:"fiszki", krok:0, ostatnie:[], biezace:null, dni:[], ostatniaWizyta:0, ocenione:0, seriaUmiem:0, plan:{egzamin:""}, klucze:{}, dzis:null, pomo:null, sciagaSlabe:false, planOglosz:"", opcje:{ludziki:true, glos:true, quiz:true, tempo:.95, myslenie:8, lektor:""}});
+const STAN_POCZ = () => ({p:{}, tryb:"nauka", sposob:"fiszki", krok:0, ostatnie:[], biezace:null, dni:[], ostatniaWizyta:0, ocenione:0, seriaUmiem:0, plan:{egzamin:""}, klucze:{}, dzis:null, pomo:null, sciagaSlabe:false, planOglosz:"", pieczatki:{}, opcje:{ludziki:true, glos:true, quiz:true, tempo:.95, myslenie:8, lektor:""}});
 let stan = STAN_POCZ();
-try { const z = JSON.parse(localStorage.getItem(KLUCZ) || "null"); if (z && z.p) { stan = Object.assign(stan, z); stan.opcje = Object.assign(STAN_POCZ().opcje, z.opcje || {}); stan.plan = Object.assign({egzamin:""}, z.plan || {}); stan.klucze = z.klucze || {}; } } catch(e) {}
+try { const z = JSON.parse(localStorage.getItem(KLUCZ) || "null"); if (z && z.p) { stan = Object.assign(stan, z); stan.opcje = Object.assign(STAN_POCZ().opcje, z.opcje || {}); stan.plan = Object.assign({egzamin:""}, z.plan || {}); stan.klucze = z.klucze || {}; stan.pieczatki = z.pieczatki || {}; } } catch(e) {}
 let pamiecDziala = true;
 function zapisz(){
   try { localStorage.setItem(KLUCZ, JSON.stringify(stan)); }
@@ -362,6 +459,45 @@ function seriaDni(){
   if (!zb.has(dzisiaj())) d.setDate(d.getDate() - 1);
   for (;;) { const s = d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); if (!zb.has(s)) break; n++; d.setDate(d.getDate() - 1); }
   return n;
+}
+
+/* ---------- paszport: pieczątka co 10% pytań na „Umiem” ---------- */
+const KRAJE = [
+  {miasto:"Rzym", flaga:"🇮🇹", tusz:"#c0392b"}, {miasto:"Paryż", flaga:"🇫🇷", tusz:"#2e5fa8"},
+  {miasto:"Barcelona", flaga:"🇪🇸", tusz:"#d35400"}, {miasto:"Londyn", flaga:"🇬🇧", tusz:"#3b5f8a"},
+  {miasto:"Nowy Jork", flaga:"🇺🇸", tusz:"#7b4fc4"}, {miasto:"Rio", flaga:"🇧🇷", tusz:"#1e8449"},
+  {miasto:"Honolulu", flaga:"🌺", tusz:"#c2185b"}, {miasto:"Bangkok", flaga:"🇹🇭", tusz:"#a8860b"},
+  {miasto:"Tokio", flaga:"🇯🇵", tusz:"#b03a2e"}, {miasto:"Seul", flaga:"🇰🇷", tusz:"#8e5bd1"},
+];
+const progPieczatki = i => Math.ceil((i + 1) * PYTANIA.length / KRAJE.length);
+let nowaPieczatka = null;
+function sprawdzPieczatki(){
+  const umiem = PYTANIA.filter(q => poziom(q.nr) === 3).length;
+  let nowa = null;
+  KRAJE.forEach((k, i) => { if (umiem >= progPieczatki(i) && !stan.pieczatki[i]) { stan.pieczatki[i] = dzisiaj(); nowa = i; } });
+  if (nowa == null) return;
+  nowaPieczatka = nowa;
+  const k = KRAJE[nowa];
+  ludzikCieszy(nowa === KRAJE.length - 1
+    ? `Ola, komplet pieczątek! Ostatni przystanek: ${k.flaga} ${k.miasto} 💜 Jesteś gotowa na egzamin!`
+    : `Ola, nowa pieczątka w paszporcie: ${k.flaga} ${k.miasto}! ✈️`);
+}
+function rysujPaszport(){
+  const ile = Object.keys(stan.pieczatki).length;
+  document.getElementById("paszport-tytul").textContent = `🛂 Paszport Oli · ${ile} z ${KRAJE.length} pieczątek`;
+  const obroty = [-8, 6, -4, 9, -10, 5, -6, 8, -3, 7];
+  document.getElementById("pieczatki").innerHTML = KRAJE.map((k, i) => {
+    const d = stan.pieczatki[i];
+    return d
+      ? `<div class="pieczatka${nowaPieczatka === i ? " nowa" : ""}" style="--tusz:${k.tusz};--obrot:${obroty[i]}deg"><span class="flaga">${k.flaga}</span>${k.miasto}<small>${d.split("-").reverse().join(".")}</small></div>`
+      : `<div class="pieczatka zamknieta" style="--obrot:${obroty[i]}deg"><span class="flaga">✈︎</span>?<small>przy ${(i + 1) * 10}%</small></div>`;
+  }).join("");
+  const umiem = PYTANIA.filter(q => poziom(q.nr) === 3).length;
+  const i = KRAJE.findIndex((k, j) => !stan.pieczatki[j]);
+  document.getElementById("paszport-info").textContent = i < 0
+    ? "Komplet! Wszystkie pieczątki zebrane. Teraz tylko zdać i w drogę 💜"
+    : `Następny przystanek: ${KRAJE[i].flaga} ${KRAJE[i].miasto}. Jeszcze ${Math.max(1, progPieczatki(i) - umiem)} ${odm(Math.max(1, progPieczatki(i) - umiem), ["pytanie", "pytania", "pytań"])} na „Umiem”.`;
+  nowaPieczatka = null;
 }
 
 /* ---------- plan do egzaminu: powtórki w rosnących odstępach (1 → 2 → 5 → 11 → 25 dni) ---------- */
@@ -445,7 +581,9 @@ function zapiszOcene(nr, l){
   stan.dzis = stan.dzis && stan.dzis.d === d ? {d, n: stan.dzis.n + 1} : {d, n: 1};
   stan.ocenione++;
   stan.seriaUmiem = l === 3 ? stan.seriaUmiem + 1 : 0;
-  if (stan.ocenione % 10 === 0) ludzikCieszy(losuj(TEKSTY.brawo10).replace("{n}", stan.ocenione));
+  sprawdzPieczatki();
+  if (nowaPieczatka != null) {}
+  else if (stan.ocenione % 10 === 0) ludzikCieszy(losuj(TEKSTY.brawo10).replace("{n}", stan.ocenione));
   else if (stan.seriaUmiem === 5) ludzikCieszy(losuj(TEKSTY.seria));
 }
 function przejdzDalej(){
@@ -871,13 +1009,14 @@ function rysujStan(){
   document.getElementById("liczby").innerHTML =
     [3,2,1,0].map(l => `<span><i class="kropka" style="background:${KOLORY[l]}"></i>${ETYKIETY[l]}: <b>${c[l]}</b></span>`).join("")
     + (seria ? `<span class="seria">🔥 Seria: ${seria} ${seria === 1 ? "dzień" : "dni"} nauki</span>` : "");
-  document.getElementById("opis").textContent = `Fiszki Oli na egzamin 💜 · ${n} z ${PLANOWANE} pytań · umiesz ${c[3]} z ${n}`;
+  document.getElementById("opis").textContent = `Zamówienia i finanse publiczne · ${n} z ${PLANOWANE} pytań · umiesz ${c[3]} z ${n}`;
   document.querySelectorAll(".tryb[data-tryb]").forEach(b => b.setAttribute("aria-pressed", b.dataset.tryb === stan.tryb));
   document.getElementById("sposoby").innerHTML = SPOSOBY.map(s =>
     `<button class="sposob" data-sposob="${s.id}" aria-pressed="${s.id === stan.sposob}"><span class="ik">${s.ik}</span>${s.nazwa}<small>${s.opis}</small></button>`).join("");
   document.querySelectorAll(".sposob").forEach(b => b.onclick = () => ustawSposob(b.dataset.sposob));
   document.getElementById("sekcja-tryby").hidden = ["egzamin", "sciaga", "slabe"].includes(stan.sposob);
   rysujPlan();
+  rysujPaszport();
   document.getElementById("op-ludziki").textContent = "Ludziki: " + (stan.opcje.ludziki ? "wł." : "wył.");
   document.getElementById("op-glos").textContent = "Głos: " + (stan.opcje.glos ? "wł." : "wył.");
   document.getElementById("op-quiz").textContent = stan.opcje.quiz ? "wł." : "wył.";
@@ -1191,7 +1330,31 @@ if (![.85, .95, 1.1].includes(stan.opcje.tempo)) stan.opcje.tempo = .95;
 if (stan.pomo && Date.now() - stan.pomo.koniec > 30 * 60e3) stan.pomo = null;
 rysujPomo();
 if (stan.biezace == null || !pytanie(stan.biezace)) stan.biezace = wybierzNastepne();
-powitaj();
+function melodia(){
+  if (!actx || !stan.opcje.glos) return;
+  try {
+    [[523, 0], [659, .12], [784, .24], [659, .36], [1047, .5]].forEach(([f, o]) => {
+      const t = actx.currentTime + o, osc = actx.createOscillator(), g = actx.createGain();
+      osc.type = "triangle"; osc.frequency.value = f;
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.22, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + .35);
+      osc.connect(g).connect(actx.destination); osc.start(t); osc.stop(t + .4);
+    });
+  } catch(e) {}
+}
+(function stronaStartowa(){
+  const el = document.getElementById("powitalna"), pl = planDzis(), ile = Object.keys(stan.pieczatki).length;
+  const czesci = [ile ? `🛂 Pieczątki: ${ile} z ${KRAJE.length}` : "🌍 Pierwsza pieczątka czeka"];
+  if (pl.doE != null && pl.doE >= 0) czesci.push(pl.doE === 0 ? "📅 egzamin dziś!" : `📅 do egzaminu ${pl.doE} ${odm(pl.doE, ["dzień", "dni", "dni"])}`);
+  document.getElementById("p-stan").textContent = czesci.join(" · ");
+  const wejdz = () => {
+    melodia();
+    el.classList.add("znika");
+    setTimeout(() => { el.hidden = true; }, 460);
+    powitaj();
+  };
+  document.getElementById("p-btn").onclick = wejdz;
+  setTimeout(() => { try { document.getElementById("p-btn").focus({preventScroll: true}); } catch(e) {} }, 50);
+})();
 rysuj(false);
 
 /* ---- aplikacja: działanie bez internetu i instalacja ---- */

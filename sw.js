@@ -1,7 +1,7 @@
 /* Quiz: działanie bez internetu.
    Strona: najpierw sieć (żeby nowe pytania docierały), bez sieci – zapisana kopia.
    Reszta (ikony, czcionki): z kopii, a w tle odświeżana. */
-const WERSJA = "quiz-v5";
+const WERSJA = "paszport-v1";
 const PLIKI = ["./", "index.html", "manifest.webmanifest", "ikona-192.png", "ikona-512.png", "ikona-180.png"];
 
 self.addEventListener("install", e => {
